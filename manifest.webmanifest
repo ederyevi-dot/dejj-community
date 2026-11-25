@@ -1,11 +1,11 @@
 {
   "name": "DEJJ — La communauté",
   "short_name": "DEJJ",
-  "description": "Agenda, collection et histoire du DEJJ",
+  "description": "Le magazine vivant de la communauté DEJJ",
   "start_url": "./",
   "display": "standalone",
-  "background_color": "#f5f7fb",
-  "theme_color": "#111827",
+  "background_color": "#f4ead9",
+  "theme_color": "#f4ead9",
   "icons": [
     {
       "src": "icon.svg",

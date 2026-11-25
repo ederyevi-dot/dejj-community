@@ -1,45 +1,42 @@
-# DEJJ Community — version Firebase
+# DEJJ — Le magazine de la communauté
 
-Cette version transforme le prototype local en première application connectée au projet Firebase `dejj-community`.
+Refonte éditoriale du site DEJJ Community, toujours connectée au projet Firebase `dejj-community`.
 
-## Fonctions incluses
-- Connexion et création de compte par e-mail / mot de passe (Firebase Authentication).
-- Création automatique d'un profil `member` dans `users/{uid}` lors de l'inscription.
-- Lecture des événements en temps réel depuis Firestore.
-- Création d'événements par les profils `admin` et `responsable`.
-- Inscriptions partagées par événement, avec compteur de places et contrôle de capacité dans une transaction Firestore.
-- Consultation des inscrits par les profils `admin`, `responsable` et `animator`.
-- Appel à volontaires One Shot par événement pour les animateurs ; sélection/refus par un `admin` ou `responsable`.
-- Modification du nom et de la délégation dans le profil.
-- Collection de cartes toujours en démonstration et stockée localement sur l'appareil.
+## Direction graphique
+- Univers magazine / scrapbook : papier crème, gros titres éditoriaux, étiquettes, rubans adhésifs, photos façon tirage et encarts colorés.
+- Palette : bleu encre, rouge corail, jaune papier, rose et vert doux.
+- Mise en page responsive pour ordinateur et mobile.
+- Accueil organisé comme une couverture de magazine : une à la une, agenda, encart Chabbat, chronique de la Paracha et mot du jour.
 
-## Configuration Firebase déjà renseignée
-Le projet Firebase et l'application Web sont déjà configurés dans `app.js`. La configuration Web Firebase n'est pas un mot de passe. La sécurité dépend des règles Firestore et des contrôles d'accès.
+## Fonctionnalités conservées
+- Connexion et création de compte par Firebase Authentication.
+- Profils et délégations dans Firestore.
+- Événements partagés en temps réel.
+- Inscriptions avec capacité et compteur transactionnel.
+- Consultation des inscrits par l'équipe autorisée.
+- Appel à volontaires One Shot et validation par un responsable.
 
-## Étapes de mise en service
-1. Dans Firebase Console > Firestore Database > Règles, remplace les règles actuelles par le contenu de `firestore.rules`, puis clique sur Publier.
-2. Vérifie dans Authentication > Méthode de connexion que « Adresse e-mail/Mot de passe » est activé.
-3. Vérifie que le document `users/{UID_ADMIN}` existe avec `role: "admin"` (le profil administrateur créé manuellement).
-4. Déploie les fichiers de ce dossier sur un hébergement HTTPS (GitHub Pages convient pour cette PWA statique).
-5. Ouvre le site, connecte-toi avec le compte administrateur déjà créé, puis crée un premier événement de test.
-6. Crée un compte animateur de test. Un administrateur devra ensuite modifier son document `users/{uid}` dans Firestore et passer `role` à `animator` pour tester One Shot.
+## Chabbat et Paracha
+- Sélecteur de ville : Marseille, Paris, Nice et Lyon.
+- Lien direct vers les horaires de Chabbat de Torah-Box : https://www.torah-box.com/calendrier/chabbat
+- La chronique affichée dans cette édition est consacrée à Vayichla'h, pour le Chabbat du 28 novembre 2026 (diaspora). Le texte est un résumé original, avec lien vers une ressource Torah-Box.
+- Les horaires ne sont pas calculés ni importés automatiquement dans cette version. Le bouton renvoie vers Torah-Box : ne pas afficher les horaires comme s'ils étaient synchronisés.
+- Le contenu de la Paracha est statique dans cette édition et devra être renouvelé chaque semaine par un administrateur ou par une intégration validée.
 
-## Rôles reconnus
-- `admin` : tous les droits de gestion.
-- `responsable` : création/gestion des événements et sélection des volontaires.
-- `animator` : consultation des inscrits et candidature One Shot.
-- `member` : consultation et inscription aux événements.
+## Collection des animateurs
+- Les anciennes cartes génériques ont été retirées.
+- Les boosters sont désactivés tant que les portraits de vrais animateurs n'ont pas été validés.
+- Avant publication d'une carte : confirmer l'identité, le prénom/surnom, la délégation, la biographie et obtenir l'accord pour l'utilisation de la photo et des informations personnelles.
+- Ne pas aspirer ou republier automatiquement les photos Instagram. Utiliser les comptes publics uniquement comme pistes de contact/vérification et demander les autorisations nécessaires.
 
-Les rôles sont attribués par un administrateur dans Firestore. Un utilisateur ne peut pas modifier son propre rôle avec les règles fournies.
+## Configuration et déploiement
+Le projet Firebase est configuré dans `app.js`. Le site peut être déployé sur GitHub Pages en HTTPS.
 
-## Important avant ouverture au public
-- Cette version est une première intégration ; elle n'a pas encore été testée sur ton projet en production.
-- Les horaires de Shabbat restent des emplacements de démonstration : aucun horaire n'est calculé.
-- Les boosters, cartes et anecdotes restent en démonstration locale ; ils ne sont pas encore synchronisés entre membres.
-- Les notifications push, les rappels J-7/J-3/Jour J, l'envoi d'e-mails, le stockage des photos et les tâches planifiées ne sont pas encore configurés.
-- Le décompte des places et les inscriptions sont sécurisés par une transaction et des règles Firestore ; il faudra tester les cas de forte concurrence avant un lancement à grande échelle.
-- Les données des inscrits sont visibles uniquement par la personne concernée et les profils d'animation autorisés selon les règles.
-- Ne publie pas de vraies données personnelles avant d'avoir testé les règles et le parcours complet avec des comptes de test.
+Pour mettre à jour le dépôt existant : remplacer les fichiers par ceux de cette archive, en conservant `firestore.rules` déjà publiées si elles n'ont pas été modifiées. Le service worker utilise le cache `dejj-static-v3` pour forcer le rafraîchissement des fichiers.
 
-## Hébergement
-Le site doit être servi en HTTPS pour que le service worker PWA fonctionne. GitHub Pages fournit HTTPS. Pour mettre à jour une version déjà installée, le cache du service worker est versionné (`dejj-static-v2`).
+## Limites à traiter avant ouverture publique
+- Les horaires de Chabbat ne sont pas encore synchronisés automatiquement.
+- La chronique de Paracha n'est pas encore alimentée automatiquement chaque semaine.
+- Les boosters et la collection d'animateurs nécessitent une base de cartes Firestore, une interface d'administration et les autorisations des personnes représentées.
+- Les notifications push et rappels planifiés ne sont pas encore configurés.
+- Tester les règles Firestore et les parcours avec des comptes de test avant d'enregistrer des données réelles.
