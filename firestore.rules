@@ -1,0 +1,73 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+    function userRole() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role;
+    }
+    function isAdmin() {
+      return signedIn() && userRole() == 'admin';
+    }
+    function isManager() {
+      return signedIn() && (userRole() == 'admin' || userRole() == 'responsable');
+    }
+    function isStaff() {
+      return signedIn() && (userRole() == 'admin' || userRole() == 'responsable' || userRole() == 'animator');
+    }
+
+    match /users/{userId} {
+      allow read: if signedIn() && (request.auth.uid == userId || isAdmin());
+      allow create: if signedIn() && request.auth.uid == userId
+        && request.resource.data.role == 'member';
+      allow update: if isAdmin() || (signedIn() && request.auth.uid == userId
+        && request.resource.data.role == resource.data.role
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['name', 'city']));
+      allow delete: if isAdmin();
+    }
+
+    match /events/{eventId} {
+      allow read: if signedIn();
+      allow create, delete: if isManager();
+      allow update: if isManager() || (signedIn()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['attendeeCount'])
+        && (
+          (request.resource.data.attendeeCount == resource.data.attendeeCount + 1
+            && !exists(/databases/$(database)/documents/events/$(eventId)/registrations/$(request.auth.uid))
+            && existsAfter(/databases/$(database)/documents/events/$(eventId)/registrations/$(request.auth.uid)))
+          ||
+          (request.resource.data.attendeeCount == resource.data.attendeeCount - 1
+            && exists(/databases/$(database)/documents/events/$(eventId)/registrations/$(request.auth.uid))
+            && !existsAfter(/databases/$(database)/documents/events/$(eventId)/registrations/$(request.auth.uid)))
+        ));
+
+      match /registrations/{uid} {
+        allow read: if signedIn() && (request.auth.uid == uid || isStaff());
+        allow create: if signedIn() && request.auth.uid == uid
+          && request.resource.data.uid == uid
+          && getAfter(/databases/$(database)/documents/events/$(eventId)).data.attendeeCount
+             == get(/databases/$(database)/documents/events/$(eventId)).data.attendeeCount + 1;
+        allow delete: if signedIn() && request.auth.uid == uid
+          && getAfter(/databases/$(database)/documents/events/$(eventId)).data.attendeeCount
+             == get(/databases/$(database)/documents/events/$(eventId)).data.attendeeCount - 1;
+        allow update: if isStaff();
+      }
+
+      match /volunteers/{uid} {
+        allow read: if signedIn() && (request.auth.uid == uid || isManager());
+        allow create: if signedIn() && request.auth.uid == uid
+          && userRole() == 'animator'
+          && request.resource.data.uid == uid
+          && request.resource.data.status == 'pending';
+        allow update: if isManager();
+        allow delete: if isManager() || (signedIn() && request.auth.uid == uid
+          && resource.data.status == 'pending');
+      }
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
