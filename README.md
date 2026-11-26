@@ -1,42 +1,35 @@
-# DEJJ — Le magazine de la communauté
+# DEJJ Community — guide de mise en ligne
 
-Refonte éditoriale du site DEJJ Community, toujours connectée au projet Firebase `dejj-community`.
+## 1. Remplacer les fichiers sur GitHub
+Dans le dépôt `dejj-community` : **Add file > Upload files**, glisse TOUS ces fichiers (ils remplacent les anciens), puis **Commit changes** :
+`index.html`, `styles.css`, `app.js`, `seed.js`, `firebase-config.js`, `sw.js`, `manifest.webmanifest`, `icon.svg`, `firestore.rules`.
 
-## Direction graphique
-- Univers magazine / scrapbook : papier crème, gros titres éditoriaux, étiquettes, rubans adhésifs, photos façon tirage et encarts colorés.
-- Palette : bleu encre, rouge corail, jaune papier, rose et vert doux.
-- Mise en page responsive pour ordinateur et mobile.
-- Accueil organisé comme une couverture de magazine : une à la une, agenda, encart Chabbat, chronique de la Paracha et mot du jour.
+Garde aussi dans le dépôt `dejj-logo.png` et `edgar-guedj.jpg` (déjà présents).
 
-## Fonctionnalités conservées
-- Connexion et création de compte par Firebase Authentication.
-- Profils et délégations dans Firestore.
-- Événements partagés en temps réel.
-- Inscriptions avec capacité et compteur transactionnel.
-- Consultation des inscrits par l'équipe autorisée.
-- Appel à volontaires One Shot et validation par un responsable.
+## 2. Renseigner la configuration Firebase (obligatoire)
+Firebase Console > roue dentée > **Paramètres du projet** > **Général** > « Vos applications » > application Web `</>` (crée-la si besoin) > copie les valeurs de `firebaseConfig`, puis colle-les dans `firebase-config.js` (surtout `apiKey`, `messagingSenderId`, `appId`).
 
-## Chabbat et Paracha
-- Sélecteur de ville : Marseille, Paris, Nice et Lyon.
-- Lien direct vers les horaires de Chabbat de Torah-Box : https://www.torah-box.com/calendrier/chabbat
-- La chronique affichée dans cette édition est consacrée à Vayichla'h, pour le Chabbat du 28 novembre 2026 (diaspora). Le texte est un résumé original, avec lien vers une ressource Torah-Box.
-- Les horaires ne sont pas calculés ni importés automatiquement dans cette version. Le bouton renvoie vers Torah-Box : ne pas afficher les horaires comme s'ils étaient synchronisés.
-- Le contenu de la Paracha est statique dans cette édition et devra être renouvelé chaque semaine par un administrateur ou par une intégration validée.
+## 3. Autoriser le site dans Firebase Authentication
+Console > **Authentication** > **Paramètres** > **Domaines autorisés** > ajoute `ederyevi-dot.github.io`.
+Sans cela, la connexion échoue sur le site publié.
 
-## Collection des animateurs
-- Les anciennes cartes génériques ont été retirées.
-- Les boosters sont désactivés tant que les portraits de vrais animateurs n'ont pas été validés.
-- Avant publication d'une carte : confirmer l'identité, le prénom/surnom, la délégation, la biographie et obtenir l'accord pour l'utilisation de la photo et des informations personnelles.
-- Ne pas aspirer ou republier automatiquement les photos Instagram. Utiliser les comptes publics uniquement comme pistes de contact/vérification et demander les autorisations nécessaires.
+## 4. Publier les règles de sécurité
+Console > **Firestore Database** > **Règles** > remplace tout par le contenu de `firestore.rules` > **Publier**.
 
-## Configuration et déploiement
-Le projet Firebase est configuré dans `app.js`. Le site peut être déployé sur GitHub Pages en HTTPS.
+## 5. Vérifier ton compte administrateur
+Dans Firestore, le document `users/<ton UID>` doit contenir le champ `role` = `admin` (texte). Connecte-toi : l'onglet **Admin** apparaît.
 
-Pour mettre à jour le dépôt existant : remplacer les fichiers par ceux de cette archive, en conservant `firestore.rules` déjà publiées si elles n'ont pas été modifiées. Le service worker utilise le cache `dejj-static-v3` pour forcer le rafraîchissement des fichiers.
+## 6. Premiers contenus (dans l'onglet Admin)
+1. **Cartes** > « Importer les cartes de départ », puis modifie la carte Edgar Guedj (surnom, rôle, biographie, anecdote vérifiés sur DEJJ La Saga).
+2. Crée tes premiers **événements**, **actualités**, **anecdotes**.
+3. Programme **Mot du jour** et **Carte du jour** par date (sinon rotation automatique).
+4. **Paracha** : saisis l'histoire de la semaine (nom tel qu'affiché sur la page Chabbat).
 
-## Limites à traiter avant ouverture publique
-- Les horaires de Chabbat ne sont pas encore synchronisés automatiquement.
-- La chronique de Paracha n'est pas encore alimentée automatiquement chaque semaine.
-- Les boosters et la collection d'animateurs nécessitent une base de cartes Firestore, une interface d'administration et les autorisations des personnes représentées.
-- Les notifications push et rappels planifiés ne sont pas encore configurés.
-- Tester les règles Firestore et les parcours avec des comptes de test avant d'enregistrer des données réelles.
+## 7. Si l'ancienne version s'affiche encore
+Le service worker met le site en cache. Cette version charge toujours le réseau en priorité ; ouvre le site, recharge deux fois (ou vide les données du site).
+
+## Limites à connaître
+- **Notifications** : les rappels (J-7, J-3, jour J, nouvel événement, booster, carte) s'affichent à l'ouverture de l'application. Les vraies notifications push en arrière-plan demandent Firebase Cloud Messaging + Cloud Functions (forfait Blaze).
+- **Booster quotidien** : limité par compte côté Firestore (changer d'appareil ne sert à rien). Le tirage des cartes se fait dans le navigateur ; l'empêcher totalement de tricher demanderait une Cloud Function. La journée change à minuit UTC (1 h ou 2 h à Paris).
+- **Chabbat** : horaires calculés par Hebcal (Marseille, Paris, Nice, Lyon). À comparer avec Torah-Box avant diffusion ; Torah-Box ne propose pas d'accès automatique.
+- **Photos et biographies** : à utiliser avec autorisation des personnes concernées.
