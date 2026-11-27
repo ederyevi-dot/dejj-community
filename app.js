@@ -773,7 +773,7 @@ function packHTML(id = '') {
       <i class="pk-holo"></i><i class="pk-sheen"></i>
     </div></div>`;
 }
-const backHTML = () => '<div class="cback" aria-label="Dos de carte DEJJ"><div class="cb-in"><div class="cb-ornament cb-top"></div><div class="cb-center"><div class="cb-mark"><img src="logo-flame.png" alt="" onerror="this.remove()"></div><div class="cb-wordmark">DEJJ</div><div class="cb-rule"></div><div class="cb-tagline">UN MOUVEMENT POUR TOUS</div><div class="cb-edition">COMMUNITY · COLLECTION</div></div><div class="cb-ornament cb-bottom"></div><span class="cb-corner cb-c1"></span><span class="cb-corner cb-c2"></span><span class="cb-corner cb-c3"></span><span class="cb-corner cb-c4"></span></div></div>';
+const backHTML = () => '<div class="cback" aria-label="Dos de carte"><div class="cb-in"><div class="cb-ornament cb-top"></div><div class="cb-center"><div class="cb-tagline">UN MOUVEMENT POUR TOUS</div><div class="cb-rule"></div><div class="cb-edition">COMMUNITY · COLLECTION</div></div><div class="cb-ornament cb-bottom"></div><span class="cb-corner cb-c1"></span><span class="cb-corner cb-c2"></span><span class="cb-corner cb-c3"></span><span class="cb-corner cb-c4"></span></div></div>';
 const FX_COL = { commune: '#ffffff', rare: '#ffc934', epique: '#c36bff', legendaire: '#ffd23c' };
 
 function showStage(pack, wasNew) {

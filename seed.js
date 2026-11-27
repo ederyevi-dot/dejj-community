@@ -144,13 +144,13 @@ export const SEED_CARDS = [
     sources: 'Parcours et citation transmis par l’intéressée — nom et photo à confirmer', published: true, inPack: true
   },
   {
-    id: 'animateur-casquette', name: 'À compléter', nickname: '', role: 'Animateur',
+    id: 'animateur-casquette', name: 'Noam Souffir', nickname: '', role: 'Animateur',
     category: 'animateur', collection: 'Animateurs', rarity: 'rare', order: 230, toVerify: true,
     anecdote: "Il s'est endormi pendant une Macabiade en 2023… et son équipe le cherchait partout.",
     career: ['2018 : Un ski', '2020 : Rejoint le DEJJ', '2023 : La Macabiade où il a disparu (il dormait)'],
     joinYear: 2020, years: 'Depuis 2020', quote: 'Quatre années de JAC à son actif, et un sommeil légendaire.',
     image: 'card-animateur-casquette.jpg', imagePos: '50% 28%',
-    sources: 'Anecdote et parcours transmis — nom et photo à confirmer', published: true, inPack: true
+    sources: 'Anecdote et parcours transmis — photo fournie', published: true, inPack: true
   },
   {
     id: 'animatrice-lunettes', name: 'À compléter', nickname: '', role: 'Animatrice',
