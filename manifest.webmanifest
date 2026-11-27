@@ -1,14 +1,23 @@
 {
   "name": "DEJJ Community",
   "short_name": "DEJJ",
-  "description": "L'application de la communauté DEJJ : événements, boosters, cartes, Chabbat et La Saga.",
+  "description": "L’application de la communauté DEJJ : événements, inscriptions, cartes à collectionner, Chabbat, paracha et mémoire de l’association. Un mouvement pour tous.",
   "lang": "fr",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
+  "orientation": "portrait",
   "background_color": "#f4ecd8",
   "theme_color": "#0f2a5c",
   "icons": [
-    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ],
+  "shortcuts": [
+    { "name": "Mon booster du jour", "url": "./#/boosters" },
+    { "name": "Agenda", "url": "./#/agenda" },
+    { "name": "Horaires de Chabbat", "url": "./#/chabbat" }
   ]
 }

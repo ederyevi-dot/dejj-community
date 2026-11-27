@@ -4,11 +4,13 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <title>DEJJ Community</title>
-  <meta name="description" content="L'application de la communauté DEJJ : événements, boosters, cartes à collectionner, Chabbat et La Saga.">
+  <meta name="description" content="L’application de la communauté DEJJ : événements, inscriptions, cartes à collectionner, Chabbat, paracha et mémoire de l’association. Un mouvement pour tous.">
   <meta name="theme-color" content="#0f2a5c">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="DEJJ">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
-  <link rel="apple-touch-icon" href="icon.svg">
+  <link rel="apple-touch-icon" href="icon-192.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Playfair+Display:ital,wght@0,500;0,800;1,500&family=Special+Elite&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
@@ -19,12 +21,12 @@
 
   <header class="masthead">
     <a class="brand" href="#/" aria-label="DEJJ Community, accueil">
-      <img src="dejj-logo.png" alt="" class="brand-logo" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'brand-fallback',textContent:'DEJJ'}))">
+      <img src="logo-flame.png" alt="DEJJ" class="brand-logo" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'brand-fallback',textContent:'DEJJ'}))">
       <span class="brand-sub">Community</span>
     </a>
     <nav id="nav" class="nav" aria-label="Navigation principale"></nav>
     <div class="head-actions">
-      <button class="bell" id="bell" data-act="notifs" aria-label="Notifications">🔔<span id="bell-n" hidden>0</span></button>
+      <button class="bell" id="bell" data-act="notifs" aria-label="Notifications"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><path d="M6 9a6 6 0 1 1 12 0c0 4 1.5 5.5 2 6H4c.5-.5 2-2 2-6z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg><span id="bell-n" hidden>0</span></button>
       <a class="btn btn-small" id="head-account" href="#/compte">Connexion</a>
     </div>
   </header>
@@ -32,6 +34,7 @@
   <main id="view" tabindex="-1"></main>
 
   <footer class="foot">
+    <p><img src="logo-tagline.png" alt="DEJJ · Un mouvement pour tous" style="height:44px;display:block;margin:0 auto .5rem"></p>
     <p>DEJJ Community · fait avec soin par et pour la communauté</p>
   </footer>
 
