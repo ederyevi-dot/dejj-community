@@ -567,3 +567,32 @@ body{background:#f5f3ed}
 .donation-list span{font-size:.86rem;color:#596575}
 .info-source{margin-top:1rem;color:#657080;font-size:.85rem}
 @media(max-width:520px){.tabbar a{font-size:.58rem;min-width:52px}.tabbar a b{font-size:1.05rem}}
+
+
+/* Bannière d'installation PWA */
+.install-banner {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .8rem;
+  flex-wrap: wrap;
+  padding: .7rem 1rem;
+  background: #f4ecd8;
+  color: #0f2a5c;
+  border-bottom: 1px solid rgba(15,42,92,.15);
+  font-size: .92rem;
+}
+.install-banner[hidden] { display: none; }
+.install-banner button {
+  border: 0;
+  border-radius: 999px;
+  padding: .55rem 1rem;
+  background: #0f2a5c;
+  color: #fff;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}

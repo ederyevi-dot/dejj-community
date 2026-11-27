@@ -2062,6 +2062,29 @@ if (CONFIGURED && !DEMO) {
   });
 }
 
+
+/* Installation PWA : Android/Chrome et navigateurs compatibles. */
+let deferredInstallPrompt = null;
+window.addEventListener('beforeinstallprompt', (event) => {
+  event.preventDefault();
+  deferredInstallPrompt = event;
+  const banner = document.getElementById('install-banner');
+  if (!banner) return;
+  banner.hidden = false;
+  banner.innerHTML = '<span>Installer DEJJ Community sur cet appareil</span><button type="button" id="install-dejj-btn">Installer</button>';
+  document.getElementById('install-dejj-btn')?.addEventListener('click', async () => {
+    if (!deferredInstallPrompt) return;
+    deferredInstallPrompt.prompt();
+    await deferredInstallPrompt.userChoice;
+    deferredInstallPrompt = null;
+    banner.hidden = true;
+  });
+});
+window.addEventListener('appinstalled', () => {
+  const banner = document.getElementById('install-banner');
+  if (banner) banner.hidden = true;
+});
+
 /* ============================== Démarrage ============================== */
 if (!DEMO && 'serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
 if (DEMO || window.__dejjTest) window.DEJJ = { S, D: () => D, refresh, render, pageHome, openBooster, showStage, demoLoad, startDemoData, cardHTML, drawPack, openModal };

@@ -1,8 +1,8 @@
 // Service worker DEJJ Community
 // Changer CACHE à chaque mise à jour des fichiers pour forcer le rafraîchissement.
-const CACHE = 'dejj-v7';
+const CACHE = 'dejj-v8-pwa';
 const SHELL = ['./', 'index.html', 'styles.css', 'app.js', 'seed.js', 'firebase-config.js', 'manifest.webmanifest',
-  'icon.svg', 'icon-192.png', 'icon-512.png', 'logo-flame.png', 'logo-tagline.png', 'crest-emblem.jpg'];
+  'icon.svg', 'icon-192.png', 'icon-512.png', 'logo-flame.png', 'logo-tagline.png', 'crest-emblem.jpg', 'andre-darmon.png', 'animateur-boucles.jpg', 'animateur-casquette.jpg', 'animatrice-crepes.jpg', 'animatrice-lunettes.jpg', 'crest-emblem.jpg', 'edgar-guedj.jpg', 'edmond-elalouf.jpg', 'esther-abitbol.jpg', 'georges-fhal.jpg', 'haim-benlolo.png', 'icon-192.png', 'icon-512.png', 'icon-maskable.png', 'jacques-bakouch.png', 'logo-flame.png', 'logo-tagline.png', 'mady-elalouf.png', 'maurice-arama.jpg', 'ralph-sultan.png', 'rikki-serfaty.png', 'salomon-abitbol.png', 'salomon-aflalo.png', 'simon-busbib.png'];
 
 self.addEventListener('install', (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(SHELL)).catch(() => {}));
