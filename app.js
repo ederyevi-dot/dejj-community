@@ -2,6 +2,7 @@
 // Un mouvement pour tous. 0 € d'abonnement : hébergement GitHub Pages + offre gratuite Firebase (Spark).
 import { firebaseConfig } from './firebase-config.js';
 import { SEED_CARDS, SEED_WORDS, SEED_ANECDOTES, SEED_QUIZ } from './seed.js';
+import { SAGA_TESTIMONIALS } from './saga-testimonials.js';
 // Le SDK Firebase est chargé dynamiquement : en mode démo (ou hors ligne), l'application
 // fonctionne sans aucun appel réseau. En production, les modules officiels sont récupérés au démarrage.
 let app = null, auth = null, db = null;
@@ -916,10 +917,8 @@ function wordBlock(w) {
 function pageSaga() {
   const an = (S.anecdotes.length ? S.anecdotes : SEED_ANECDOTES).filter((a) => a.published !== false);
   const quiz = S.quiz.length ? S.quiz : SEED_QUIZ;
-  const sagaCards = visibleCards().filter((c) => (c.collection || '').toLowerCase().includes('saga') || c.historical || c.category === 'personne');
-  const cats = [...new Set(sagaCards.map((c) => c.category))];
-  const shown = sagaCards.filter((c) => S.saga.cat === 'toutes' || c.category === S.saga.cat);
-  // Quiz
+  const terms = [...new Set(SAGA_TESTIMONIALS.map((t) => t.category).filter(Boolean))];
+  const shown = SAGA_TESTIMONIALS.filter((t) => S.saga.cat === 'toutes' || t.category === S.saga.cat);
   if (!S.quizState.order || S.quizState.order.length !== quiz.length) S.quizState.order = quiz.map((_, i) => i);
   const order = S.quizState.order;
   const q = S.quizState;
@@ -932,10 +931,16 @@ function pageSaga() {
       ${(cur.options || []).map((o, i) => `<button class="quiz-opt ${q.picked !== null ? (i === cur.answer ? 'ok' : i === q.picked ? 'ko' : '') : ''}" data-act="quizpick" data-i="${i}" ${q.picked !== null ? 'disabled' : ''}>${esc(o)}</button>`).join('')}
       ${q.picked !== null ? `<button class="btn" data-act="quiznext">${q.i + 1 >= quiz.length ? 'Voir mon score' : 'Question suivante'}</button>` : ''}`;
   }
-  return `<span class="kicker">Mémoire de l’association</span>${cut('La Saga', 'big')}
-  <p class="serif" style="font-size:1.15rem;max-width:44rem">Cartes historiques, anecdotes, personnalités et souvenirs du DEJJ. Sources vérifiées, textes validés avant publication : <a href="https://www.dejjlasaga.com/fr/" target="_blank" rel="noopener">DEJJ La Saga</a>.</p>
-  <div class="tabs">${['toutes', ...cats].map((c) => `<button class="${S.saga.cat === c ? 'on' : ''}" data-act="sagacat" data-v="${esc(c === 'toutes' ? 'toutes' : c)}">${c === 'toutes' ? 'Toutes' : esc(CATS[c] || c)}</button>`).join('')}</div>
-  <div class="cards">${shown.map((c, k) => `<div data-act="card" data-id="${esc(c.id)}">${cardHTML(c, { full: true, num: k + 1, total: shown.length, tilt: false })}</div>`).join('') || '<div class="empty">Cartes historiques en cours de validation.</div>'}</div>
+  return `<span class="kicker">Archives de DEJJ La Saga</span>${cut('Témoignages', 'big')}
+  <p class="serif" style="font-size:1.1rem;max-width:48rem">Retrouve les récits, souvenirs et hommages publiés dans les archives de DEJJ La Saga. Chaque entrée renvoie vers le témoignage original.</p>
+  <p class="type muted">${SAGA_TESTIMONIALS.length} témoignages référencés · Archives de 1959 à 2026</p>
+  <div class="tabs saga-tabs">${['toutes', ...terms].map((c) => `<button class="${S.saga.cat === c ? 'on' : ''}" data-act="sagacat" data-v="${esc(c)}">${c === 'toutes' ? 'Tous les témoignages' : esc(c)}</button>`).join('')}</div>
+  <div class="saga-list">${shown.map((t) => `<article class="saga-testimony">
+    <div class="saga-testimony-meta"><span>${esc(t.year || 'Archives')}</span><span>${esc(t.person)}</span></div>
+    <h3>${esc(t.title)}</h3><p>${esc(t.summary)}</p>
+    <div class="saga-testimony-foot"><span>${esc(t.category)}${t.region ? ` · ${esc(t.region)}` : ''}</span><a href="${esc(t.url)}" target="_blank" rel="noopener noreferrer">Lire le témoignage original ↗</a></div>
+  </article>`).join('') || '<div class="empty">Aucun témoignage dans cette catégorie.</div>'}</div>
+  <p class="muted" style="margin-top:1rem">Source : <a href="https://www.dejjlasaga.com/fr/temoignages.php" target="_blank" rel="noopener noreferrer">DEJJ La Saga — Témoignages</a>. Les résumés sont des présentations courtes ; le texte intégral reste sur le site source.</p>
   <div class="grid g2" style="margin-top:1.6rem">
     <section class="block"><span class="kicker">Anecdotes</span>
       ${an.length ? an.map((a) => `<article class="timeline-item"><h3>${esc(a.title)}</h3>${a.year ? `<div class="muted type">${esc(a.year)}</div>` : ''}<p>${esc(a.body).replace(/\n/g, '<br>')}</p></article>`).join('') : '<p class="muted">Aucune anecdote publiée.</p>'}

@@ -658,3 +658,15 @@ body{background:#f5f3ed}
 .pack-opening-scene .hint,.pack-opening-scene #tear{position:relative;z-index:4;}
 @media(max-width:480px){.pk-cards-under{width:48vw;height:67vw}.pk-brand{font-size:1.75rem}.pk-title{font-size:1.45rem}}
 @media(prefers-reduced-motion:reduce){.pk-cards-under.emerge{animation:none;opacity:1;transform:translateX(-50%) translateY(-25px)}}
+
+
+/* Témoignages — La Saga */
+.saga-tabs{margin:1rem 0;gap:.45rem}
+.saga-tabs button{max-width:100%;font-size:.9rem}
+.saga-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:1rem;margin-top:1rem}
+.saga-testimony{display:flex;flex-direction:column;min-width:0;background:#fffaf0;border:1.5px solid #c7b98f;border-left:5px solid var(--orange);padding:1rem;box-shadow:3px 4px 0 rgba(15,42,92,.12);border-radius:3px}
+.saga-testimony-meta{display:flex;justify-content:space-between;gap:.5rem;flex-wrap:wrap;font:.75rem var(--f-type);text-transform:uppercase;color:#766a4e}
+.saga-testimony h3{font:1.15rem/1.25 var(--f-serif);color:var(--navy);margin:.55rem 0}
+.saga-testimony p{margin:0 0 .9rem;color:#39352d;line-height:1.5}
+.saga-testimony-foot{display:flex;justify-content:space-between;align-items:flex-end;gap:.7rem;flex-wrap:wrap;margin-top:auto;padding-top:.6rem;border-top:1px solid #e1d6bb;font:.75rem var(--f-type);color:#74684e}
+.saga-testimony-foot a{font:700 .82rem var(--f-body);color:var(--navy);text-decoration:underline;text-underline-offset:3px}
