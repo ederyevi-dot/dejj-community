@@ -302,10 +302,21 @@ textarea{min-height:90px;resize:vertical}
 .progress .bar i{background:linear-gradient(90deg,var(--orange),var(--yellow))}
 
 /* ============ Dos de carte et retournement ============ */
-.cback{container-type:inline-size;position:absolute;inset:0}
-.cb-in{position:absolute;inset:0;border-radius:5.4cqw;border:2.6cqw solid var(--yellow);background:repeating-linear-gradient(45deg,#0f2a5c 0 3cqw,#173a7c 3cqw 6cqw);box-shadow:0 1.2cqw 0 rgba(0,0,0,.35);display:grid;place-items:center;overflow:hidden}
-.cb-logo{font:24cqw var(--f-title);background:var(--cream);color:var(--navy);padding:0 4cqw;transform:rotate(-5deg);box-shadow:2cqw 2cqw 0 var(--orange)}
-.cb-in::after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.28) 50%,transparent 65%);background-size:250% 100%;animation:sheen 3s linear infinite}
+.cback{container-type:inline-size;position:absolute;inset:0;padding:3.1cqw}
+.cb-in{position:absolute;inset:3.1cqw;border-radius:3.2cqw;border:.75cqw solid #d9b65a;background:radial-gradient(ellipse at 50% 42%,#234a85 0%,#142f5e 48%,#0a1c3d 100%);box-shadow:0 1.2cqw 0 rgba(0,0,0,.35),inset 0 0 0 .35cqw rgba(255,255,255,.16);display:grid;place-items:center;overflow:hidden}
+.cb-in::before{content:"";position:absolute;inset:2.2cqw;border:.28cqw solid rgba(239,211,139,.72);border-radius:2.2cqw;pointer-events:none}
+.cb-in::after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.16) 50%,transparent 65%);background-size:250% 100%;animation:sheen 4.5s linear infinite;pointer-events:none}
+.cb-center{position:relative;z-index:2;width:78%;display:flex;flex-direction:column;align-items:center;text-align:center;color:#fff4d6}
+.cb-mark{width:25cqw;height:25cqw;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 35% 25%,#fff7dd,#e9c76d 68%,#a87522);border:.8cqw solid rgba(255,255,255,.75);box-shadow:0 1.5cqw 3cqw rgba(0,0,0,.35),0 0 0 1.2cqw rgba(220,183,94,.22);margin-bottom:5cqw}
+.cb-mark img{width:67%;height:67%;object-fit:contain;filter:drop-shadow(0 .7cqw .8cqw rgba(0,0,0,.25))}
+.cb-wordmark{font:22cqw/1 var(--f-title);letter-spacing:.08em;color:#fff4d6;text-shadow:0 .8cqw 0 #07172f,0 1.4cqw 2cqw rgba(0,0,0,.35)}
+.cb-rule{height:.6cqw;width:60%;margin:4cqw 0 2.8cqw;background:linear-gradient(90deg,transparent,#e8c56e,transparent)}
+.cb-tagline{font:700 3.7cqw/1.3 var(--f-type);letter-spacing:.18em;color:#f1d58c}
+.cb-edition{margin-top:8cqw;font:2.5cqw var(--f-type);letter-spacing:.22em;color:rgba(255,244,214,.7)}
+.cb-ornament{position:absolute;left:17%;width:66%;height:8cqw;border-top:.35cqw solid rgba(233,199,115,.45);border-bottom:.35cqw solid rgba(233,199,115,.45);transform:skewX(-28deg)}
+.cb-top{top:7%}.cb-bottom{bottom:7%}
+.cb-corner{position:absolute;width:7cqw;height:7cqw;border-color:#e6c36e;border-style:solid;opacity:.8}
+.cb-c1{top:4%;left:4%;border-width:.7cqw 0 0 .7cqw}.cb-c2{top:4%;right:4%;border-width:.7cqw .7cqw 0 0}.cb-c3{bottom:4%;left:4%;border-width:0 0 .7cqw .7cqw}.cb-c4{bottom:4%;right:4%;border-width:0 .7cqw .7cqw 0}
 .flip{position:relative;width:min(300px,74vw);aspect-ratio:5/7;perspective:1400px;cursor:pointer;transition:transform .5s ease,opacity .5s}
 .flip-in{position:absolute;inset:0;transform-style:preserve-3d;transition:transform .95s cubic-bezier(.2,.85,.25,1.15)}
 .flip.on .flip-in{transform:rotateY(180deg)}

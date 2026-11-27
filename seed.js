@@ -16,7 +16,7 @@ export const SEED_CARDS = [
     anecdote: "Né à Sétif, il se demande comment aller vers les jeunes qui ne viendront jamais au scoutisme. De là naît le DEJJ, au Maroc puis en France, et sa « méthode Lynclair » : former des formateurs qui en formeront à leur tour.",
     career: ['1948 : Se demande comment aller vers les jeunes qui ne viendront jamais au scoutisme', "1961 : S'installe en France et y transpose le DEJJ", '1965 : 6 000 jeunes encadrés par 550 moniteurs'],
     years: '1921 - 2007', quote: "Défendre l'intérêt des causes sans l'intérêt de soi.", quoteBy: 'D’après ses proches',
-    image: 'edgar-guedj.jpg', sources: 'DEJJ La Saga — dejjlasaga.com', historical: true, toVerify: true, published: true, inPack: true
+    image: 'card-edgar-guedj.jpg', sources: 'DEJJ La Saga — dejjlasaga.com', historical: true, toVerify: true, published: true, inPack: true
   },
   {
     id: 'esther-abitbol', name: 'Esther Abitbol', nickname: 'Fléole', role: 'Fondatrice',
@@ -24,7 +24,7 @@ export const SEED_CARDS = [
     anecdote: "Née à Casablanca, elle fonde le DEJJ au Maroc puis dirige la délégation de Lyon. Le Grand Rabbin Kling l'appelait avec son mari « Monsieur et Madame DEJJ ».",
     career: ['1962 : Prend la direction du DEJJ de Lyon', '1977 : Alyah en Israël', '1997 : Prix Mofet pour son travail éducatif'],
     years: '1933', quote: "Je m'appelle Esther Abitbol et je vais créer un mouvement de jeunesse. Confiez-moi vos enfants !",
-    image: 'esther-abitbol.jpg', sources: 'DEJJ La Saga — dejjlasaga.com', historical: true, toVerify: true, published: true, inPack: true
+    image: 'card-esther-abitbol.jpg', sources: 'DEJJ La Saga — dejjlasaga.com', historical: true, toVerify: true, published: true, inPack: true
   },
   {
     id: 'salomon-abitbol', name: 'Salomon Abitbol', nickname: 'Autruche', role: 'Fondateur',
@@ -32,7 +32,7 @@ export const SEED_CARDS = [
     anecdote: "Chef de troupe aux Éclaireurs de Casablanca, il fait renaître la communauté juive de Saint-Fons en frappant à chaque porte.",
     career: ['1960 : Épouse Esther et part en France', '1962 : Dirige la Maison des Jeunes de Saint-Fons', "1990 : Mission de shli'hout au DEJJ de Paris"],
     years: '1933', quote: 'Nous avions commencé de rien.',
-    image: 'salomon-abitbol.png', sources: 'DEJJ La Saga — dejjlasaga.com', historical: true, toVerify: true, published: true, inPack: true
+    image: 'card-salomon-abitbol.jpg', sources: 'DEJJ La Saga — dejjlasaga.com', historical: true, toVerify: true, published: true, inPack: true
   },
   {
     id: 'salomon-aflalo', name: 'Salomon Aflalo', nickname: 'Chevreuil', role: 'Fondateur puis président',
@@ -40,7 +40,7 @@ export const SEED_CARDS = [
     anecdote: "Éducateur et rassembleur, il structure le DEJJ à Nice avant d'en devenir président. Ses chants dans les camps de Levens ont marqué des générations d'enfants.",
     career: ['1962 : Structure le DEJJ à Nice', '1963 : Encadre les camps de Levens', 'Plus tard : Devient président du DEJJ'],
     years: '', quote: "Agir dans l'ombre et la discrétion, rester loin des lumières et des médailles.", quoteBy: 'Haïm Benlolo, à propos de Chevreuil',
-    image: 'salomon-aflalo.png', sources: 'DEJJ La Saga — dejjlasaga.com', historical: true, toVerify: true, published: true, inPack: true
+    image: 'card-salomon-aflalo.jpg', sources: 'DEJJ La Saga — dejjlasaga.com', historical: true, toVerify: true, published: true, inPack: true
   },
   {
     id: 'haim-benlolo', name: 'Haïm Benlolo', nickname: 'Bélier', role: 'Fondateur, Pionniers',
@@ -48,7 +48,7 @@ export const SEED_CARDS = [
     anecdote: 'Repéré par Lynclair, il quitte le Maroc en 1963 et lance en France la branche des Pionniers. Une voix de référence du mouvement.',
     career: ['1963 : Quitte le Maroc, premiers pas au DEJJ de Lyon', '1967 : Lance les Pionniers (11-15 ans) à Paris', 'Après 1967 : Crée la BEP et la BEC, camps en Corse'],
     years: '1942', quote: 'Une voix à laquelle on se réfère, une opinion respectée.',
-    image: 'haim-benlolo.png', sources: 'DEJJ La Saga — dejjlasaga.com', historical: true, toVerify: true, published: true, inPack: true
+    image: 'card-haim-benlolo.jpg', sources: 'DEJJ La Saga — dejjlasaga.com', historical: true, toVerify: true, published: true, inPack: true
   },
   {
     id: 'andre-darmon', name: 'André Darmon', nickname: 'Otarie', role: 'Délégué régional, Toulouse',
@@ -56,7 +56,7 @@ export const SEED_CARDS = [
     anecdote: "Délégué régional du DEJJ à Toulouse, il y organise les premières colonies et des Bar Mitsva pour les enfants de familles modestes.",
     career: ['1962 : Nommé délégué régional à Toulouse', '1963 : Première réunion avec 6 ou 7 enfants', "Colonies : Équipes nommées d'après les 12 tribus d'Israël"],
     years: '1928', quote: 'Le DEJJ était sa vie, et le DEJJ a façonné nos vies.', quoteBy: 'Margalith, sa fille',
-    image: 'andre-darmon.png', sources: 'DEJJ La Saga — dejjlasaga.com', historical: true, toVerify: true, published: true, inPack: true
+    image: 'card-andre-darmon.jpg', sources: 'DEJJ La Saga — dejjlasaga.com', historical: true, toVerify: true, published: true, inPack: true
   },
   {
     id: 'georges-fhal', name: 'Georges Fhal', nickname: 'Boulette', role: 'Fondateur, Marseille',
@@ -64,7 +64,7 @@ export const SEED_CARDS = [
     anecdote: "Venu de Constantine, il fonde en 1962 la délégation de Marseille. Un homme jovial, « une boule de dynamite ».",
     career: ['1962 : Fonde le DEJJ de Marseille', "1962-1972 : Plus d'une centaine de cadres", '2020 : Publie « Du Rhummel au Kotel »'],
     years: '1924 - 2021', quote: 'Que seraient devenues nos vies sans toi, Boulette ?', quoteBy: 'Un membre du DEJJ Marseille',
-    image: 'georges-fhal.jpg', sources: 'DEJJ La Saga — dejjlasaga.com', historical: true, toVerify: true, published: true, inPack: true
+    image: 'card-georges-fhal.jpg', sources: 'DEJJ La Saga — dejjlasaga.com', historical: true, toVerify: true, published: true, inPack: true
   },
   {
     id: 'rikki-serfaty', name: 'Rikki Serfaty', nickname: 'Rikki', role: 'Responsable nationale des 7-12 ans (REDEF)',
@@ -72,7 +72,7 @@ export const SEED_CARDS = [
     anecdote: "Plus de 40 ans consacrés à l'éducation informelle de l'enfance juive. Responsable nationale des unités 7-12 ans, devenues les REDEF.",
     career: ["1962 : Accueille les enfants rapatriés d'Algérie", 'Vers 1964 : Mission spéciale à Marseille', '2011 : Prix de la Fondation Gaston Tenoudji'],
     years: '', quote: "Un enfant est un être en devenir que l'on va aimer et aider à grandir.",
-    image: 'rikki-serfaty.png', sources: 'DEJJ La Saga — dejjlasaga.com', historical: true, toVerify: true, published: true, inPack: true
+    image: 'card-rikki-serfaty.jpg', sources: 'DEJJ La Saga — dejjlasaga.com', historical: true, toVerify: true, published: true, inPack: true
   },
   {
     id: 'jacques-bakouch', name: 'Jacques Bakouch', nickname: 'Belette', role: 'Fondateur, formateur BAFA',
@@ -80,7 +80,7 @@ export const SEED_CARDS = [
     anecdote: "Membre fondateur du DEJJ à Marseille, éducateur de terrain et formateur BAFA pendant plus de 30 ans. Une « grande gueule » toujours au service des enfants.",
     career: ['1965 : Développe le DEJJ à Marseille', 'Pendant 30 ans : Formateur BAFA', "2009 : Officier de l'Ordre national du mérite"],
     years: '1937 - 2021', quote: 'Jacques avait pour habitude de ne retenir que le positif.', quoteBy: 'Alain Benhamou, dit Puma',
-    image: 'jacques-bakouch.png', sources: 'DEJJ La Saga — dejjlasaga.com', historical: true, toVerify: true, published: true, inPack: true
+    image: 'card-jacques-bakouch.jpg', sources: 'DEJJ La Saga — dejjlasaga.com', historical: true, toVerify: true, published: true, inPack: true
   },
   {
     id: 'maurice-arama', name: 'Maurice Arama', nickname: '', role: 'Responsable des publications, dessinateur du logo',
@@ -88,7 +88,7 @@ export const SEED_CARDS = [
     anecdote: "Responsable des publications du DEJJ, il a dessiné le logo du DEJJ, la flamme, ainsi qu'une centaine de figurines.",
     career: ['1963 : Responsable des publications du DEJJ', 'Création : Dessine la flamme, logo du DEJJ', 'Chaque semaine : Illustre « La Source de vie »'],
     years: '1934', quote: "L'action du DEJJ fut au début comme une torche allumée.",
-    image: 'maurice-arama.jpg', sources: 'DEJJ La Saga — dejjlasaga.com', historical: true, toVerify: true, published: true, inPack: true
+    image: 'card-maurice-arama.jpg', sources: 'DEJJ La Saga — dejjlasaga.com', historical: true, toVerify: true, published: true, inPack: true
   },
   {
     id: 'simon-busbib', name: 'Simon Busbib', nickname: 'Mammouth', role: 'Fondateur, maître des chants',
@@ -96,7 +96,7 @@ export const SEED_CARDS = [
     anecdote: "Explorateur du DEJJ, il repérait les lieux des futurs camps. Il chantait en français, ladino, espagnol et hébreu autour des feux de camp.",
     career: ['1962 : Quitte le Maroc, engagé aussitôt par Lynclair', "1962 : Accueille les familles rapatriées d'Algérie", 'Veillées : Dirige les chants à plusieurs voix'],
     years: '', quote: 'Le chant était sa vie et il aimait partager humblement sa voix magnifique avec tout le monde.',
-    image: 'simon-busbib.png', sources: 'DEJJ La Saga — dejjlasaga.com', historical: true, toVerify: true, published: true, inPack: true
+    image: 'card-simon-busbib.jpg', sources: 'DEJJ La Saga — dejjlasaga.com', historical: true, toVerify: true, published: true, inPack: true
   },
   {
     id: 'edmond-elalouf', name: 'Edmond Elalouf', nickname: '', role: 'Co-fondateur',
@@ -104,7 +104,7 @@ export const SEED_CARDS = [
     anecdote: "Élève d'Emmanuel Levinas, il arrive en France en 1963 avec l'équipe fondatrice. Il préside ensuite le Centre communautaire de Paris.",
     career: ['1963 : Co-fonde le DEJJ en France', '1990 : Vice-président du Centre communautaire', "2010 : Chevalier de la Légion d'honneur"],
     years: '1930 - 2025', quote: 'Une vision humaniste du judaïsme.',
-    image: 'edmond-elalouf.jpg', sources: 'DEJJ La Saga — dejjlasaga.com', historical: true, toVerify: true, published: true, inPack: true
+    image: 'card-edmond-elalouf.jpg', sources: 'DEJJ La Saga — dejjlasaga.com', historical: true, toVerify: true, published: true, inPack: true
   },
   {
     id: 'mady-elalouf', name: 'Mady Elalouf', nickname: '', role: 'Éducatrice, JAC',
@@ -112,7 +112,7 @@ export const SEED_CARDS = [
     anecdote: "Éclaireuse à Fès dès 1943, permanente du DEJJ à Paris, elle anime la JAC pour les adolescents. Cofondatrice du camp d'Ashkelon.",
     career: ["1962 : Dirige le centre aéré de l'école Maïmonide", 'Années 1960 : Anime la JAC', "2023 : Un hall porte son nom, avec celui d'Edmond"],
     years: '1934', quote: 'Au Maroc, tout le monde est bénévole !',
-    image: 'mady-elalouf.png', sources: 'DEJJ La Saga — dejjlasaga.com', historical: true, toVerify: true, published: true, inPack: true
+    image: 'card-mady-elalouf.jpg', sources: 'DEJJ La Saga — dejjlasaga.com', historical: true, toVerify: true, published: true, inPack: true
   },
   {
     id: 'ralph-sultan', name: 'Ralph Sultan', nickname: '', role: 'Fondateur, artisan',
@@ -120,7 +120,7 @@ export const SEED_CARDS = [
     anecdote: "Bijoutier de métier, il forme les jeunes cadres du DEJJ et veille à la qualité artistique des publications. Il n'a jamais eu de totem.",
     career: ['1963 : Part pour la France avec Lynclair', 'DEJJ : Forme les cadres, travaux manuels', "1969 : S'installe à Montréal"],
     years: '1930 - 2019', quote: 'Il adorait sa famille, ses amis, Israël et le Bon Dieu.',
-    image: 'ralph-sultan.png', sources: 'DEJJ La Saga — dejjlasaga.com', historical: true, toVerify: true, published: true, inPack: true
+    image: 'card-ralph-sultan.jpg', sources: 'DEJJ La Saga — dejjlasaga.com', historical: true, toVerify: true, published: true, inPack: true
   },
 
   // ================= ANIMATEURS D'AUJOURD'HUI =================
@@ -131,7 +131,7 @@ export const SEED_CARDS = [
     category: 'animateur', collection: 'Animateurs', rarity: 'rare', order: 210, toVerify: true,
     anecdote: "Un enfant lui demande qui est le plus rapide entre un guépard et Hachem. Il répond qu'il n'y a pas de débat : Hachem est le plus rapide.",
     career: [], joinYear: null, years: '', quote: '', quoteBy: '',
-    image: 'animateur-boucles.jpg', imagePos: '50% 24%',
+    image: 'card-animateur-boucles.jpg', imagePos: '50% 24%',
     sources: 'Anecdote transmise par l’intéressé — nom et photo à confirmer', published: true, inPack: true
   },
   {
@@ -140,7 +140,7 @@ export const SEED_CARDS = [
     anecdote: "Son parcours en dit long : enfant au DEJJ, puis animatrice (et reine des crêpes), directrice, et aujourd'hui vice-présidente. Sa phrase est restée : « Un enfant n'est pas un vase que l'on remplit, mais une flamme que l'on allume. »",
     career: ['2016 : Enfant', '2019 : Animatrice', '2022 : Direction', '2025 : Vice-présidente'],
     joinYear: 2016, years: 'Depuis 2016', quote: "Un enfant n'est pas un vase que l'on remplit, mais une flamme que l'on allume.",
-    image: 'animatrice-crepes.jpg', imagePos: '50% 22%',
+    image: 'card-animatrice-crepes.jpg', imagePos: '50% 22%',
     sources: 'Parcours et citation transmis par l’intéressée — nom et photo à confirmer', published: true, inPack: true
   },
   {
@@ -149,7 +149,7 @@ export const SEED_CARDS = [
     anecdote: "Il s'est endormi pendant une Macabiade en 2023… et son équipe le cherchait partout.",
     career: ['2018 : Un ski', '2020 : Rejoint le DEJJ', '2023 : La Macabiade où il a disparu (il dormait)'],
     joinYear: 2020, years: 'Depuis 2020', quote: 'Quatre années de JAC à son actif, et un sommeil légendaire.',
-    image: 'animateur-casquette.jpg', imagePos: '50% 28%',
+    image: 'card-animateur-casquette.jpg', imagePos: '50% 28%',
     sources: 'Anecdote et parcours transmis — nom et photo à confirmer', published: true, inPack: true
   },
   {
@@ -158,7 +158,7 @@ export const SEED_CARDS = [
     anecdote: "Arrivée en 2025, elle a déjà fait un centre aéré avec des REDEF — et elle est repartie avec une réserve d'histoires.",
     career: ['2025 : Rejoint le DEJJ', '2025 : Centre aéré avec les REDEF'],
     joinYear: 2025, years: 'Depuis 2025', quote: '',
-    image: 'animatrice-lunettes.jpg', imagePos: '50% 20%',
+    image: 'card-animatrice-lunettes.jpg', imagePos: '50% 20%',
     sources: 'Informations transmises — nom et photo à confirmer', published: true, inPack: true
   }
 ];

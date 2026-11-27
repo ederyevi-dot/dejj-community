@@ -1,95 +1,208 @@
 rules_version = '2';
+// =====================================================================
+// DEJJ Community — règles de sécurité Cloud Firestore
+// Les autorisations sont appliquées ICI (pas seulement en masquant des boutons).
+// À coller dans Firebase → Firestore Database → Règles, puis « Publier ».
+// =====================================================================
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // ---------- Fonctions utilitaires ----------
+    // ---------------------- Utilitaires ----------------------
     function signedIn() { return request.auth != null; }
+    function userPath() { return /databases/$(database)/documents/users/$(request.auth.uid); }
+    function profile() { return get(userPath()).data; }
+    function role() { return signedIn() && exists(userPath()) ? profile().get('role', 'member') : 'none'; }
+    function isAdmin()       { return role() == 'admin'; }
+    function isResponsable() { return role() in ['admin', 'responsable']; }
+    function isAnimateur()   { return role() in ['admin', 'responsable', 'animateur']; }
 
-    function isAdmin() {
-      return signedIn()
-        && exists(/databases/$(database)/documents/users/$(request.auth.uid))
-        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.get('role', 'member') == 'admin';
-    }
-
-    // Jour courant (UTC) sous forme 20261126 : sert à limiter à un booster par jour.
+    // Jour courant en UTC, au format AAAAMMJJ : sert au quota quotidien des membres.
     function today() {
       return request.time.year() * 10000 + request.time.month() * 100 + request.time.day();
     }
+    function ownerUser(uid) { return /databases/$(database)/documents/users/$(uid); }
 
-    // ---------- Utilisateurs ----------
+    // ---------------------- Profils ----------------------
     match /users/{uid} {
-      allow read: if signedIn() && (request.auth.uid == uid || isAdmin());
+      // Chacun lit son profil ; les animateurs et au-dessus lisent les membres (gestion des rôles).
+      allow read: if signedIn() && (request.auth.uid == uid || isAnimateur());
 
-      // Un membre ne peut créer son profil qu'avec le rôle "member".
+      // Création : rôle « member » obligatoire, quota de booster à zéro.
       allow create: if signedIn() && request.auth.uid == uid
         && request.resource.data.role == 'member'
         && request.resource.data.lastBoosterDay == 0
-        && request.resource.data.keys().hasOnly(['name', 'email', 'delegation', 'role', 'createdAt', 'lastBoosterDay']);
+        && request.resource.data.keys().hasOnly([
+             'name', 'email', 'delegation', 'role', 'photoURL', 'createdAt', 'lastBoosterDay',
+             'notifyEvents', 'notifyCards', 'notifyContent'
+           ]);
 
-      // Un membre peut changer son nom, sa délégation et ouvrir son booster du jour (une fois par jour).
-      // Il ne peut JAMAIS modifier son rôle.
+      // Mise à jour de son propre profil : jamais son rôle, ni son e-mail.
       allow update: if signedIn() && request.auth.uid == uid
-        && request.resource.data.get('role', 'member') == resource.data.get('role', 'member')
-        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['name', 'delegation', 'lastBoosterDay'])
+        && request.resource.data.role == resource.data.role
+        && request.resource.data.email == resource.data.email
+        && request.resource.data.diff(resource.data).affectedKeys()
+             .hasOnly(['name', 'delegation', 'photoURL', 'notifyEvents', 'notifyCards', 'notifyContent', 'lastBoosterDay'])
         && (
           !request.resource.data.diff(resource.data).affectedKeys().hasAny(['lastBoosterDay'])
-          || (request.resource.data.lastBoosterDay == today()
-              && resource.data.get('lastBoosterDay', 0) < today())
+          || (request.resource.data.lastBoosterDay == today() && resource.data.get('lastBoosterDay', 0) < today())
         );
 
-      // L'administrateur peut tout modifier (ex. changer un rôle).
-      allow update: if isAdmin();
-      allow delete: if isAdmin();
+      // L'administrateur peut tout modifier (dont les rôles) et supprimer un compte de données.
+      allow update, delete: if isAdmin();
 
-      // Collection de cartes de chaque membre.
+      // --- Collection personnelle (album) ---
       match /collection/{cardId} {
         allow read: if signedIn() && (request.auth.uid == uid || isAdmin());
 
-        // Les cartes ne s'ajoutent que dans le même lot que l'ouverture du booster du jour.
+        // Les membres sont limités à un booster/jour ; l'administrateur peut ouvrir sans limite.
         allow create: if signedIn() && request.auth.uid == uid
-          && request.resource.data.keys().hasOnly(['cardId', 'count', 'firstAt'])
           && request.resource.data.cardId == cardId
           && request.resource.data.count is int
-          && request.resource.data.count >= 1 && request.resource.data.count <= 5
-          && getAfter(/databases/$(database)/documents/users/$(uid)).data.get('lastBoosterDay', 0) == today()
-          && get(/databases/$(database)/documents/users/$(uid)).data.get('lastBoosterDay', 0) < today();
+          && request.resource.data.count >= 1 && request.resource.data.count <= 20
+          && (isAdmin() || (
+            getAfter(ownerUser(uid)).data.get('lastBoosterDay', 0) == today()
+            && get(ownerUser(uid)).data.get('lastBoosterDay', 0) < today()
+          ));
 
         allow update: if signedIn() && request.auth.uid == uid
-          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['count'])
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['count', 'lastAt'])
           && request.resource.data.count > resource.data.count
-          && request.resource.data.count <= resource.data.count + 5
-          && getAfter(/databases/$(database)/documents/users/$(uid)).data.get('lastBoosterDay', 0) == today()
-          && get(/databases/$(database)/documents/users/$(uid)).data.get('lastBoosterDay', 0) < today();
+          && request.resource.data.count <= resource.data.count + 20
+          && (isAdmin() || (
+            getAfter(ownerUser(uid)).data.get('lastBoosterDay', 0) == today()
+            && get(ownerUser(uid)).data.get('lastBoosterDay', 0) < today()
+          ));
 
         allow delete: if isAdmin();
       }
+
+      // Copie privée des inscriptions du membre (évite les index composites et les lectures croisées).
+      match /rsvps/{eventId} {
+        allow read: if signedIn() && (request.auth.uid == uid || isAdmin());
+        allow write: if signedIn() && request.auth.uid == uid;
+      }
+
+      // Jetons de notification push (facultatif)
+      match /pushTokens/{tokenId} {
+        allow read, write: if signedIn() && request.auth.uid == uid;
+      }
     }
 
-    // ---------- Contenus publics en lecture, réservés à l'administrateur en écriture ----------
-    match /events/{id}       { allow read: if true; allow write: if isAdmin(); }
-    match /news/{id}         { allow read: if true; allow write: if isAdmin(); }
-    match /cards/{id}        { allow read: if true; allow write: if isAdmin(); }
-    match /words/{id}        { allow read: if true; allow write: if isAdmin(); }
-    match /daily/{id}        { allow read: if true; allow write: if isAdmin(); }
-    match /parashot/{id}     { allow read: if true; allow write: if isAdmin(); }
-    match /anecdotes/{id}    { allow read: if true; allow write: if isAdmin(); }
-    match /quiz/{id}         { allow read: if true; allow write: if isAdmin(); }
+    // ---------------------- Journal des boosters ----------------------
+    // Un document par membre et par jour : empêche une seconde ouverture, même depuis un autre appareil.
+    match /boosters/{logId} {
+      function isMine() { return signedIn() && logId.split('_')[0] == request.auth.uid; }
+      allow read: if isMine() || isAdmin();
+      allow create: if isMine()
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.day == today()
+        && !exists(/databases/$(database)/documents/boosters/$(logId))
+        && (isAdmin() || get(ownerUser(request.auth.uid)).data.get('lastBoosterDay', 0) < today());
+      allow update, delete: if isAdmin();
+    }
 
-    // ---------- Inscriptions aux événements ----------
+    // ---------------------- Contenus publics ----------------------
+    // Lecture publique des contenus publiés (published != false). Écriture par rôle.
+    match /events/{id} {
+      allow read: if resource.data.get('published', true) != false || isAnimateur();
+      allow create, update: if isResponsable();
+      allow delete: if isResponsable();
+    }
+    match /news/{id} {
+      allow read: if resource.data.get('published', true) != false || isAnimateur();
+      allow write: if isResponsable();
+    }
+    match /anecdotes/{id} {
+      allow read: if resource.data.get('published', true) != false || isAnimateur();
+      allow write: if isResponsable();
+    }
+    match /quiz/{id} {
+      allow read: if resource.data.get('published', true) != false || isAnimateur();
+      allow write: if isResponsable();
+    }
+    match /words/{id} {
+      allow read: if true;              // pas de données personnelles
+      allow write: if isResponsable();
+    }
+    match /daily/{id} {
+      allow read: if true;
+      allow write: if isResponsable();
+    }
+    match /parashot/{id} {
+      allow read: if resource.data.get('published', true) != false || isAnimateur();
+      allow write: if isResponsable();
+    }
+    // Cartes : la collection complète est publique (comme un album qu'on feuillette),
+    // l'écriture est réservée à l'administrateur (photos, anecdotes, raretés).
+    match /cards/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    // Réglages : lecture publique (probabilités, villes de Chabbat), écriture admin.
+    match /config/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // ---------------------- Inscriptions aux événements ----------------------
+    // events/{eventId}/rsvps/{uid} : une seule inscription par membre (l'ID du document = son uid).
     match /events/{eventId}/rsvps/{uid} {
+      allow read: if signedIn() && (request.auth.uid == uid || isAnimateur());
       allow create, update: if signedIn() && request.auth.uid == uid
-        && request.resource.data.keys().hasOnly(['eventId', 'uid', 'name', 'answer', 'createdAt'])
+        && request.resource.data.uid == request.auth.uid
         && request.resource.data.eventId == eventId
-        && request.resource.data.uid == uid
-        && request.resource.data.answer in ['yes', 'no']
-        && request.resource.data.name is string && request.resource.data.name.size() <= 80
-        && request.resource.data.createdAt == request.time;
-      allow delete: if signedIn() && (request.auth.uid == uid || isAdmin());
+        && request.resource.data.answer in ['yes', 'no', 'wait'];
+      allow delete: if signedIn() && (request.auth.uid == uid || isResponsable());
     }
 
-    // Lecture des inscriptions (requête de groupe) pour les membres connectés.
+    // Noms des participants : lisibles SEULEMENT par les animateurs et au-dessus
+    // (les autres membres ne voient que les compteurs agrégés de `stats/public`).
+    match /events/{eventId}/names/{uid} {
+      allow read: if isAnimateur();
+      // Le nom ne peut être écrit que dans le même lot qu'une inscription correspondante.
+      allow create, update: if signedIn() && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['name', 'answer', 'createdAt'])
+        && request.resource.data.name == profile().get('name', '')
+        && request.resource.data.answer in ['yes', 'no', 'wait']
+        && getAfter(/databases/$(database)/documents/events/$(eventId)/rsvps/$(uid)).data.answer == request.resource.data.answer;
+      // Suppression autorisée uniquement si le document d'inscription est supprimé dans le même lot.
+      allow delete: if signedIn() && request.auth.uid == uid
+        && !existsAfter(/databases/$(database)/documents/events/$(eventId)/rsvps/$(uid));
+    }
+
+    // Compteurs agrégés (aucune donnée personnelle).
+    function validPublicStats(eventId) {
+      return request.resource.data.keys().hasOnly(['yes', 'no', 'wait'])
+        && request.resource.data.get('yes', 0) is int && request.resource.data.get('yes', 0) >= 0
+        && request.resource.data.get('no', 0) is int && request.resource.data.get('no', 0) >= 0
+        && request.resource.data.get('wait', 0) is int && request.resource.data.get('wait', 0) >= 0
+        && existsAfter(/databases/$(database)/documents/events/$(eventId)/rsvps/$(request.auth.uid));
+    }
+    match /events/{eventId}/stats/{docId} {
+      allow read: if docId == 'public';
+      allow create: if signedIn() && docId == 'public' && validPublicStats(eventId);
+      allow update: if signedIn() && docId == 'public'
+        && validPublicStats(eventId)
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['yes', 'no', 'wait']);
+      allow delete: if isResponsable();
+    }
+
+    // Compteurs publics lus en une seule requête par l'application : collection rsvps/{eventId} → stats.
+    match /rsvps/{eventId} {
+      allow read: if signedIn() || resource.data.get('public', true) == true;
+      allow write: if false; // écriture uniquement via events/{id}/stats/public
+    }
+
+    // Requêtes de groupe (collectionGroup) : uniquement pour les animateurs et au-dessus (noms),
+    // et pour les compteurs publics.
+    match /{path=**}/names/{id} {
+      allow read: if isAnimateur();
+    }
+    match /{path=**}/stats/{id} {
+      allow read: if id == 'public';
+    }
     match /{path=**}/rsvps/{id} {
-      allow read: if signedIn();
+      allow read: if isAnimateur() || (signedIn() && resource.data.uid == request.auth.uid);
     }
   }
 }
