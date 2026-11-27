@@ -415,7 +415,8 @@ function drawPack(model) {
 function currentBoosterDayKey() { return localDay(); }
 function canOpenBooster() {
   if (!S.user) return false;
-  if (S.boosterLog) return false; // déjà ouvert aujourd'hui (journal serveur)
+  if (isAdmin()) return true; // l'administrateur peut ouvrir autant de boosters qu'il le souhaite
+  if (S.boosterLog) return false;
   return (S.profile?.lastBoosterDay || 0) < utcKey();
 }
 function nextBoosterText() {
@@ -425,10 +426,14 @@ function nextBoosterText() {
 }
 
 /* ============================== Page : Accueil ============================== */
+function isMarseilleEvent(e) {
+  const where = [e.city, e.delegation, e.location, e.place, e.address, e.region].filter(Boolean).join(' ').toLowerCase();
+  return /marseille|bouches[- ]du[- ]rh[oô]ne|\b13\d{3}\b|\b13\b/i.test(where);
+}
 function upcomingEvents() {
   const now = Date.now() - 3 * 36e5;
   return S.events
-    .filter((e) => e.published !== false && toDate(e.date) && toDate(e.date).getTime() >= now)
+    .filter((e) => e.published !== false && isMarseilleEvent(e) && toDate(e.date) && toDate(e.date).getTime() >= now)
     .sort((a, b) => toDate(a.date) - toDate(b.date));
 }
 
@@ -560,24 +565,10 @@ function newsItem(n) {
 function pageAgenda() {
   const evs = upcomingEvents();
   const past = S.events
-    .filter((e) => e.published !== false && !evs.includes(e) && toDate(e.date))
+    .filter((e) => e.published !== false && isMarseilleEvent(e) && !evs.includes(e) && toDate(e.date))
     .sort((a, b) => toDate(b.date) - toDate(a.date)).slice(0, 6);
-  let html = `<span class="kicker">Calendrier</span>${cut('Agenda', 'big')}
-    <section class="block official-agenda" style="margin:1rem 0">
-      <span class="kicker">Événement national · départ Marseille</span>
-      <h2 class="serif">Séjour ski DEJJ 2027</h2>
-      <p class="type">21–28 février 2027 · Alpes-de-Haute-Provence</p>
-      <p>REDEF, Pionniers et JAC · du CP à la Terminale · 870 € tout compris selon l’annonce officielle.</p>
-      <a class="btn btn-small" href="https://www.dejj.fr/copie-de-bafa-fg-appro" target="_blank" rel="noopener">Informations et inscription sur DEJJ.fr</a>
-    </section>
-    <section class="block official-agenda" style="margin:1rem 0">
-      <span class="kicker">Stage national · départ Marseille</span>
-      <h2 class="serif">Formation Maayan</h2>
-      <p class="type">22–31 décembre 2026 · Pas-de-Calais</p>
-      <p>Pour les jeunes de 15 ans (nés en 2011). Formation, hébergement, pension complète casher et transports inclus. Tarif adhérent annoncé : 449 €.</p>
-      <a class="btn btn-small" href="https://www.dejj.fr/copie-de-ski-sud-marseille-nice-2027-1" target="_blank" rel="noopener">Informations et inscription sur DEJJ.fr</a>
-    </section>
-    <p class="muted" style="font-size:.85rem">Les événements locaux de Marseille ne sont ajoutés au calendrier que lorsque leurs dates sont confirmées sur le site officiel. La liste actuellement indexée affiche encore des événements d’octobre 2026, déjà passés.</p>`;
+  let html = `<span class="kicker">Calendrier · Marseille</span>${cut('Agenda', 'big')}
+    <p class="muted" style="font-size:.85rem">Ici figurent uniquement les activités organisées par le DEJJ Marseille. Les séjours nationaux et les formations (Maayan, BAFA, etc.) ne sont pas affichés dans cet agenda.</p>`;
   if (!S.user) html += `<div class="block" style="margin-top:1rem"><p>Connecte-toi pour t’inscrire aux événements et voir les places restantes.</p><a class="btn" href="#/compte">Connexion</a></div>`;
   if (!evs.length) html += '<div class="empty" style="margin-top:1rem">Aucun événement à venir.</div>';
   let lastMonth = '';
@@ -662,14 +653,14 @@ function pageBoosters() {
   const pool = packPool();
   const owned = [...S.collection.keys()].filter((id) => packPool().some((c) => c.id === id)).length;
   const rarLine = `<div class="odds">${Object.entries(RAR).map(([k, v]) => `<div class="odd r-${k}"><b>${cfg.perCard[k] ?? 0} %</b><span>${v.label}</span></div>`).join('')}</div>`;
-  return `<span class="kicker">Un par jour, gratuit</span>${cut('Boosters', 'big')}
+  return `<span class="kicker">${isAdmin() ? 'Ouvertures illimitées pour l’administrateur' : 'Un booster gratuit par jour'}</span>${cut('Boosters', 'big')}
   <div class="block" style="margin-top:1.2rem;text-align:center">
     <div class="pack-preview">${packHTML()}</div>
     <p class="serif" style="font-size:1.2rem">${cfg.packSize} cartes par booster${cfg.minRareLast ? ', la dernière au moins rare' : ''}.</p>
     ${!S.user ? '<a class="btn" href="#/compte">Se connecter pour ouvrir</a>'
       : ok ? '<button class="btn" data-act="openpack">Ouvrir mon booster</button>'
         : `<p class="chip y" style="font-size:.9rem">Déjà ouvert aujourd’hui · ${esc(nextBoosterText())}</p>`}
-    <p class="muted" style="margin-top:1rem">Un seul booster gratuit par jour et par compte. Le tirage est enregistré sur ton compte (journal <code>boosters</code>) pour empêcher une seconde ouverture, même sur un autre appareil.</p>
+    <p class="muted" style="margin-top:1rem">${isAdmin() ? 'Mode administrateur : ouvertures illimitées, sans quota quotidien.' : 'Un seul booster gratuit par jour et par compte. Le tirage est enregistré sur ton compte.'}</p>
   </div>
   ${S.user ? `<div class="progress" style="margin-top:1.2rem"><b class="type">${owned} / ${pool.length} cartes découvertes</b><div class="bar"><i style="width:${pool.length ? Math.round((owned / pool.length) * 100) : 0}%"></i></div><a class="btn btn-small" href="#/album">Mon album</a></div>` : ''}
   <h3 class="sec-title type">Probabilités affichées (par carte)</h3>
@@ -727,12 +718,13 @@ async function openBooster() {
   const wasNew = new Set([...tally.keys()].filter((id) => !S.collection.has(id)));
   const uid = S.user.uid;
   const day = utcKey();
-  const logId = `${uid}_${day}`;
+  const adminOpening = isAdmin();
+  const logId = adminOpening ? `${uid}_${day}_admin_${Date.now()}_${Math.random().toString(36).slice(2, 8)}` : `${uid}_${day}`;
   const model = pack.reduce((best, c) => (roleRank('member') && (RAR[c.rarity]?.w ?? 0) > (RAR[best]?.w ?? 0) ? c.rarity : best), 'commune');
   if (DEMO) {
-    if (D.boosters[logId] || (D.users[uid]?.lastBoosterDay || 0) >= day) return toast('Booster déjà ouvert aujourd’hui. Reviens demain !');
+    if (!adminOpening && (D.boosters[logId] || (D.users[uid]?.lastBoosterDay || 0) >= day)) return toast('Booster déjà ouvert aujourd’hui. Reviens demain !');
     D.boosters[logId] = { uid, day, cards: [...tally.keys()], counts: Object.fromEntries(tally), model, packSize: pack.length };
-    D.users[uid].lastBoosterDay = day;
+    if (!adminOpening) D.users[uid].lastBoosterDay = day;
     D.collections[uid] = D.collections[uid] || {};
     tally.forEach((n, cid) => { const prev = D.collections[uid][cid]; D.collections[uid][cid] = { cardId: cid, count: (prev?.count || 0) + n }; });
     demoPersist(); startDemoData();
@@ -744,10 +736,10 @@ async function openBooster() {
     const userRef = doc(db, 'users', uid);
     await runTransaction(db, async (tx) => {
       const [logSnap, userSnap] = [await tx.get(logRef), await tx.get(userRef)];
-      if (logSnap.exists()) throw new Error('already');
-      if ((userSnap.data()?.lastBoosterDay || 0) >= day) throw new Error('already');
-      tx.set(logRef, { uid, day, cards: [...tally.keys()], counts: Object.fromEntries(tally), model, packSize: pack.length, createdAt: serverTimestamp() });
-      tx.update(userRef, { lastBoosterDay: day });
+      if (!adminOpening && logSnap.exists()) throw new Error('already');
+      if (!adminOpening && (userSnap.data()?.lastBoosterDay || 0) >= day) throw new Error('already');
+      tx.set(logRef, { uid, day, cards: [...tally.keys()], counts: Object.fromEntries(tally), model, packSize: pack.length, adminOpening, createdAt: serverTimestamp() });
+      if (!adminOpening) tx.update(userRef, { lastBoosterDay: day });
       tally.forEach((n, id) => {
         const cardRef = doc(db, 'users', uid, 'collection', id);
         const mine = S.collection.get(id);
@@ -949,18 +941,6 @@ function pageInfos() {
       <p class="muted">Repères publiés par le DEJJ dans sa présentation des séjours. Les groupes et critères d’inscription peuvent être précisés par l’équipe locale.</p>
     </section>
     <section class="block info-block">
-      <h2 class="serif">Prochain séjour annoncé</h2>
-      <div class="official-event">
-        <p class="type">21 au 28 février 2027 · Alpes-de-Haute-Provence</p>
-        <h3>Séjour ski DEJJ 2027</h3>
-        <p>Départs de Marseille et Nice. Séjour annoncé pour les jeunes du CP à la Terminale, groupes REDEF, Pionniers et JAC.</p>
-        <p><strong>Tarif annoncé : 870 € tout compris</strong> (transport, pension complète, cours ESF, forfait et matériel).</p>
-        <p>Au programme : 10 heures de cours ESF, passage des étoiles et sortie détente (patinoire ou bowling), avec les activités et veillées DEJJ.</p>
-        <a class="btn" href="https://www.dejj.fr/copie-de-bafa-fg-appro" target="_blank" rel="noopener">Voir les informations officielles</a>
-      </div>
-      <p class="muted">Les détails sont ceux publiés sur le site national du DEJJ ; vérifie les disponibilités et les modalités directement auprès de l’association.</p>
-    </section>
-    <section class="block info-block">
       <h2 class="serif">Soutenir le DEJJ</h2>
       <p>Les dons contribuent notamment aux activités éducatives, aux journées en centre de vacances, aux formations BAFA et aux séjours.</p>
       <div class="donation-list">
@@ -968,8 +948,8 @@ function pageInfos() {
       </div>
       <a class="btn" href="https://www.dejj.fr/copie-de-faire-un-don" target="_blank" rel="noopener">Faire un don au DEJJ</a>
     </section>
-    <p class="info-source">Informations issues de <a href="https://www.dejj.fr/" target="_blank" rel="noopener">dejj.fr</a>. Pour les activités locales de Marseille, consulte aussi la rubrique officielle des événements.</p>
-    <a href="https://www.dejj.fr/event-list" target="_blank" rel="noopener">Consulter tous les événements du DEJJ</a>
+    <p class="info-source">Les informations sur les activités locales sont limitées aux événements du DEJJ Marseille.</p>
+    <a href="https://www.dejj.fr/event-list" target="_blank" rel="noopener">Consulter la page officielle des événements du DEJJ</a>
   `;
 }
 
