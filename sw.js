@@ -1,6 +1,6 @@
 // Service worker DEJJ Community
 // Changer CACHE à chaque mise à jour des fichiers pour forcer le rafraîchissement.
-const CACHE = 'dejj-v14-naomie';
+const CACHE = 'dejj-v15-noms-booster-naturel';
 const SHELL = ['./', 'index.html', 'styles.css', 'app.js', 'seed.js', 'firebase-config.js', 'manifest.webmanifest',
   'icon.svg', 'icon-192.png', 'icon-512.png', 'logo-flame.png', 'logo-tagline.png', 'crest-emblem.jpg', 'andre-darmon.png', 'animateur-boucles.jpg', 'animateur-casquette.jpg', 'animatrice-crepes.jpg', 'animatrice-lunettes.jpg', 'crest-emblem.jpg', 'edgar-guedj.jpg', 'edmond-elalouf.jpg', 'esther-abitbol.jpg', 'georges-fhal.jpg', 'haim-benlolo.png', 'icon-192.png', 'icon-512.png', 'icon-maskable.png', 'jacques-bakouch.png', 'logo-flame.png', 'logo-tagline.png', 'mady-elalouf.png', 'maurice-arama.jpg', 'ralph-sultan.png', 'rikki-serfaty.png', 'salomon-abitbol.png', 'salomon-aflalo.png', 'simon-busbib.png', 'card-edgar-guedj.jpg', 'card-esther-abitbol.jpg', 'card-salomon-abitbol.jpg', 'card-salomon-aflalo.jpg', 'card-haim-benlolo.jpg', 'card-andre-darmon.jpg', 'card-georges-fhal.jpg', 'card-rikki-serfaty.jpg', 'card-jacques-bakouch.jpg', 'card-maurice-arama.jpg', 'card-simon-busbib.jpg', 'card-edmond-elalouf.jpg', 'card-mady-elalouf.jpg', 'card-ralph-sultan.jpg', 'card-animateur-boucles.jpg', 'card-animatrice-crepes.jpg', 'card-animateur-casquette.jpg', 'card-animatrice-lunettes.jpg'];
 

@@ -355,12 +355,22 @@ textarea{min-height:90px;resize:vertical}
 .pk-light{position:absolute;left:6%;right:6%;top:6%;height:0;background:linear-gradient(0deg,rgba(255,235,150,.95),transparent);filter:blur(8px);opacity:0;z-index:6}
 .pk.charge{animation:charge 1s ease-in forwards}
 @keyframes charge{0%,100%{transform:perspective(900px) rotateX(var(--rx)) rotateY(var(--ry))}15%{transform:perspective(900px) rotateX(4deg) rotateY(-5deg) translateX(-3px)}30%{transform:perspective(900px) rotateX(-4deg) rotateY(5deg) translateX(3px)}50%{transform:perspective(900px) rotateX(5deg) rotateY(-6deg) translateX(-4px)}70%{transform:perspective(900px) rotateX(-3deg) rotateY(4deg) translateX(4px)}90%{filter:drop-shadow(0 0 38px #ffd23c) brightness(1.25)}}
-.pk.tear .pk-seal-top{animation:tearoff .8s cubic-bezier(.4,0,.8,.3) forwards}
-.pk.tear .pk-light{animation:light .8s ease-out forwards}
-@keyframes tearoff{0%{transform:rotate(0) translate(0,0);clip-path:polygon(0 0,100% 0,100% 100%,0 100%)}25%{transform:rotate(-8deg) translate(-4px,-5px)}60%{transform:rotate(-32deg) translate(-35px,-40px) skewX(-12deg)}100%{transform:rotate(-75deg) translate(-125px,-210px) skewX(-18deg);opacity:0}}
+.pk-tear-strip{position:absolute;z-index:7;left:4%;right:4%;top:2.5%;height:5%;opacity:0;pointer-events:none;border-radius:3px;background:repeating-linear-gradient(90deg,rgba(255,255,255,.65) 0 1px,rgba(40,20,20,.2) 1px 3px),linear-gradient(180deg,#ffe9b2,#a83b2b 55%,#f7a04c);box-shadow:0 2px 5px rgba(0,0,0,.35)}
+.pk-flap{position:absolute;z-index:6;top:4%;height:12%;width:48%;opacity:0;pointer-events:none;background:linear-gradient(180deg,#f7bd72,#a83428 48%,#e8793d);border:1px solid rgba(255,225,160,.75);box-shadow:0 5px 9px rgba(0,0,0,.25)}
+.pk-flap-left{left:2%;transform-origin:0 0;clip-path:polygon(0 0,100% 0,88% 80%,75% 100%,0 86%)}
+.pk-flap-right{right:2%;transform-origin:100% 0;clip-path:polygon(0 0,100% 0,100% 86%,24% 100%,12% 80%)}
+.pk.tear .pk-tear-strip{animation:pullstrip .55s cubic-bezier(.2,.75,.25,1) forwards}
+.pk.tear .pk-seal-top{animation:seamSplit .65s .18s ease-out forwards}
+.pk.tear .pk-flap-left{animation:peelLeft .8s .48s cubic-bezier(.2,.7,.2,1) forwards}
+.pk.tear .pk-flap-right{animation:peelRight .8s .48s cubic-bezier(.2,.7,.2,1) forwards}
+.pk.tear .pk-light{animation:light .8s .45s ease-out forwards}
+@keyframes pullstrip{0%{opacity:0;transform:translateY(0) rotate(0)}15%{opacity:1}100%{opacity:0;transform:translate(42px,-24px) rotate(9deg)}}
+@keyframes seamSplit{0%{clip-path:inset(0);transform:none}55%{clip-path:polygon(0 0,100% 0,94% 70%,80% 100%,0 84%);transform:translateY(-3px)}100%{clip-path:polygon(0 0,100% 0,94% 70%,80% 100%,0 84%);transform:translateY(-8px);opacity:.35}}
+@keyframes peelLeft{0%{opacity:0;transform:rotate(0) translateY(0)}15%{opacity:1}100%{opacity:0;transform:rotate(-24deg) translate(-28px,-34px) skewX(-8deg)}}
+@keyframes peelRight{0%{opacity:0;transform:rotate(0) translateY(0)}15%{opacity:1}100%{opacity:0;transform:rotate(19deg) translate(28px,-30px) skewX(8deg)}}
 @keyframes light{0%{opacity:0;height:0}30%{opacity:1;height:35%}100%{opacity:0;height:90%;top:-30%}}
-.pk.out{animation:packout .55s ease-in forwards}
-@keyframes packout{to{translate:0 140px;opacity:0;scale:.9}}
+.pk.out{animation:packout .7s ease-in forwards}
+@keyframes packout{to{translate:0 90px;rotate:-5deg;opacity:0;scale:.96}}
 
 /* ============ Scène d'ouverture ============ */
 .stage{z-index:100;background:#071636;overflow:hidden;display:block;padding:0}

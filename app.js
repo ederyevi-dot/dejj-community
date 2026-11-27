@@ -144,7 +144,23 @@ const S = {
 };
 
 // Catalogue complet (Firestore si disponible, sinon contenu de départ).
-const allCards = () => (S.cards.length ? S.cards : SEED_CARDS);
+// Les fiches Firestore peuvent contenir d'anciennes valeurs vides (ex. « À compléter »).
+// On les fusionne avec les fiches de référence : un champ vide en base ne doit jamais effacer
+// un nom déjà confirmé dans le catalogue local.
+const allCards = () => {
+  if (!S.cards.length) return SEED_CARDS;
+  const remote = new Map(S.cards.map((c) => [c.id, c]));
+  return SEED_CARDS.map((base) => {
+    const cloud = remote.get(base.id);
+    if (!cloud) return base;
+    const merged = { ...base, ...cloud };
+    for (const key of ['name', 'role', 'anecdote', 'image', 'collection']) {
+      if (typeof cloud[key] === 'string' && (!cloud[key].trim() || (key === 'name' && /^(à|a)\s+compléter$/i.test(cloud[key].trim())))) merged[key] = base[key];
+    }
+    if (!Array.isArray(cloud.career) || !cloud.career.length) merged.career = base.career;
+    return merged;
+  }).concat(S.cards.filter((c) => !SEED_CARDS.some((b) => b.id === c.id)));
+};
 const sortCards = (list) => [...list].sort((a, b) => {
   const oa = a.order ?? 999, ob = b.order ?? 999;
   return oa - ob || String(a.name || '').localeCompare(String(b.name || ''), 'fr');
@@ -764,7 +780,7 @@ async function openBooster() {
 function packHTML(id = '') {
   const cfg = boosterCfg();
   return `<div class="pk tilt" ${id ? `id="${id}"` : ''} aria-label="Sachet de booster à ouvrir">
-    <div class="pk-light"></div><div class="pk-seal pk-seal-top"></div>
+    <div class="pk-light"></div><div class="pk-seal pk-seal-top"></div><div class="pk-tear-strip"></div><div class="pk-flap pk-flap-left"></div><div class="pk-flap pk-flap-right"></div>
     <div class="pk-body">
       <div class="pk-art"><span class="pk-stars">✦　✦　✦</span>
         <div class="pk-emblem" aria-hidden="true"><span>✦</span></div>
