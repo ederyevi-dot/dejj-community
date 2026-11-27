@@ -127,12 +127,12 @@ export const SEED_CARDS = [
   // Les noms restent vides tant que l'utilisateur ne les a pas fournis : rien n'est inventé.
   // Chaque carte garde sa photo d'origine (déposer animateur-*.jpg) et son anecdote, sans mélange entre photos.
   {
-    id: 'animateur-boucles', name: 'À compléter', nickname: '', role: 'Animateur',
+    id: 'animateur-boucles', name: 'Nathan Benichou', nickname: '', role: 'Animateur',
     category: 'animateur', collection: 'Animateurs', rarity: 'rare', order: 210, toVerify: true,
     anecdote: "Un enfant lui demande qui est le plus rapide entre un guépard et Hachem. Il répond qu'il n'y a pas de débat : Hachem est le plus rapide.",
-    career: [], joinYear: null, years: '', quote: '', quoteBy: '',
-    image: 'card-animateur-boucles.jpg', imagePos: '50% 24%',
-    sources: 'Anecdote transmise par l’intéressé — nom et photo à confirmer', published: true, inPack: true
+    career: ['2025 : Participe à un centre aéré'], joinYear: 2025, years: '2025', quote: '', quoteBy: '',
+    image: 'card-animateur-boucles.jpg', imagePos: '50% 18%',
+    sources: 'Nom, photo et parcours transmis par l’utilisateur', published: true, inPack: true
   },
   {
     id: 'animatrice-crepes', name: 'À compléter', nickname: '', role: 'Vice-présidente',
@@ -153,13 +153,13 @@ export const SEED_CARDS = [
     sources: 'Anecdote et parcours transmis — photo fournie', published: true, inPack: true
   },
   {
-    id: 'animatrice-lunettes', name: 'À compléter', nickname: '', role: 'Animatrice',
-    category: 'animateur', collection: 'Animateurs', rarity: 'rare', order: 240, toVerify: true,
+    id: 'animatrice-lunettes', name: 'Naomie', nickname: '', role: 'Animatrice',
+    category: 'animateur', collection: 'Animateurs', rarity: 'rare', order: 240, toVerify: false,
     anecdote: "Arrivée en 2025, elle a déjà fait un centre aéré avec des REDEF — et elle est repartie avec une réserve d'histoires.",
     career: ['2025 : Rejoint le DEJJ', '2025 : Centre aéré avec les REDEF'],
     joinYear: 2025, years: 'Depuis 2025', quote: '',
     image: 'card-animatrice-lunettes.jpg', imagePos: '50% 20%',
-    sources: 'Informations transmises — nom et photo à confirmer', published: true, inPack: true
+    sources: 'Nom confirmé par l’utilisateur — photo fournie', published: true, inPack: true
   }
 ];
 

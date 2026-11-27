@@ -763,15 +763,15 @@ async function openBooster() {
 /* ---------- Paquet et ouverture façon Pokémon TCG ---------- */
 function packHTML(id = '') {
   const cfg = boosterCfg();
-  return `<div class="pk tilt" ${id ? `id="${id}"` : ''}>
-    <div class="pk-light"></div>
-    <div class="pk-top"></div>
+  return `<div class="pk tilt" ${id ? `id="${id}"` : ''} aria-label="Sachet de booster à ouvrir">
+    <div class="pk-light"></div><div class="pk-seal pk-seal-top"></div>
     <div class="pk-body">
-      <div class="pk-art"><span class="pk-stars">✦ ✦ ✦</span>
-        <div class="pk-logo"><img src="logo-flame.png" alt="" onerror="this.replaceWith(Object.assign(document.createElement('b'),{textContent:'DEJJ'}))"></div>
-        <b class="pk-title">BOOSTER</b><small>Édition Communauté</small><span class="pk-count">${cfg.packSize} cartes</span></div>
-      <i class="pk-holo"></i><i class="pk-sheen"></i>
-    </div></div>`;
+      <div class="pk-art"><span class="pk-stars">✦　✦　✦</span>
+        <div class="pk-emblem" aria-hidden="true"><span>✦</span></div>
+        <b class="pk-title">BOOSTER</b><small>Édition Communauté</small><span class="pk-count">${cfg.packSize} cartes</span>
+        <span class="pk-bottomline">COLLECTION À DÉCOUVRIR</span></div>
+      <i class="pk-holo"></i><i class="pk-sheen"></i><i class="pk-crease pk-crease-a"></i><i class="pk-crease pk-crease-b"></i>
+    </div><div class="pk-seal pk-seal-bottom"></div><div class="pk-side"></div></div>`;
 }
 const backHTML = () => '<div class="cback" aria-label="Dos de carte"><div class="cb-in"><div class="cb-ornament cb-top"></div><div class="cb-center"><div class="cb-tagline">UN MOUVEMENT POUR TOUS</div><div class="cb-rule"></div><div class="cb-edition">COMMUNITY · COLLECTION</div></div><div class="cb-ornament cb-bottom"></div><span class="cb-corner cb-c1"></span><span class="cb-corner cb-c2"></span><span class="cb-corner cb-c3"></span><span class="cb-corner cb-c4"></span></div></div>';
 const FX_COL = { commune: '#ffffff', rare: '#ffc934', epique: '#c36bff', legendaire: '#ffd23c' };
