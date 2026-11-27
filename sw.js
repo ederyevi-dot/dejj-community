@@ -1,6 +1,6 @@
 // Service worker DEJJ Community
 // Changer CACHE à chaque mise à jour des fichiers pour forcer le rafraîchissement.
-const CACHE = 'dejj-v5';
+const CACHE = 'dejj-v6';
 const SHELL = ['./', 'index.html', 'styles.css', 'app.js', 'seed.js', 'firebase-config.js', 'manifest.webmanifest',
   'icon.svg', 'icon-192.png', 'icon-512.png', 'logo-flame.png', 'logo-tagline.png', 'crest-emblem.jpg'];
 

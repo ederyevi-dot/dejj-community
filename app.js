@@ -187,7 +187,7 @@ const icon = (n, cls = '') => `<svg class="ic ${cls}" viewBox="0 0 24 24" aria-h
 /* ============================== Routage ============================== */
 const NAV = [
   ['#/', 'Accueil', 'home'], ['#/agenda', 'Agenda', 'calendar'], ['#/boosters', 'Boosters', 'cards'],
-  ['#/album', 'Album', 'album'], ['#/saga', 'La Saga', 'news'], ['#/chabbat', 'Chabbat', 'candle']
+  ['#/album', 'Album', 'album'], ['#/saga', 'La Saga', 'news'], ['#/infos', 'Infos & dons', 'heart'], ['#/chabbat', 'Chabbat', 'candle']
 ];
 const route = () => location.hash || '#/';
 
@@ -227,6 +227,7 @@ function render() {
   else if (r === '#/boosters') html = pageBoosters();
   else if (r === '#/album') html = pageAlbum();
   else if (r === '#/saga') html = pageSaga();
+  else if (r === '#/infos') html = pageInfos();
   else if (r === '#/chabbat') html = pageChabbat();
   else if (r === '#/compte') html = pageAccount();
   else if (r.startsWith('#/admin')) html = pageAdmin();
@@ -295,7 +296,7 @@ function cardHTML(c, { full = false, count = 0, lock = false, tilt = true, num =
       <div class="tcg-head"><h3>${esc(lock ? 'Carte à découvrir' : (c.name || 'Nom à compléter'))}</h3><span class="tcg-sym" title="${RAR[r].label}">${RAR[r].sym}</span></div>
       <div class="tcg-art">
         ${cardArt(c, lock)}
-        <span class="tcg-ph">${lock ? '?' : esc(initials(c.name))}</span>
+        ${!lock && !cardImage(c) ? '<span class="tcg-ph photo-missing">Photo à ajouter</span>' : ''}
         ${lock ? '' : seal}${lock ? '' : ageBadge}
         ${!lock && c.nickname ? `<span class="tcg-nick">Totem · ${esc(c.nickname)}</span>` : ''}
         <i class="tcg-shine"></i>
@@ -492,7 +493,7 @@ function anecdoteOfDay() {
 }
 
 function quickLinks() {
-  const links = [['#/agenda', 'calendar', 'Agenda'], ['#/album', 'album', 'Mon album'], ['#/compte', 'user', 'Espace membre'], ['#/boosters', 'cards', 'Booster'], ['#/saga', 'news', 'La Saga'], ['#/chabbat', 'candle', 'Chabbat']];
+  const links = [['#/agenda', 'calendar', 'Agenda'], ['#/album', 'album', 'Mon album'], ['#/compte', 'user', 'Espace membre'], ['#/boosters', 'cards', 'Booster'], ['#/saga', 'news', 'La Saga'], ['#/infos', 'heart', 'Infos & dons'], ['#/chabbat', 'candle', 'Chabbat']];
   return `<section class="quick">${links.map(([h, i, l]) => `<a href="${h}"><b>${icon(i)}</b>${l}</a>`).join('')}</section>`;
 }
 
@@ -561,7 +562,22 @@ function pageAgenda() {
   const past = S.events
     .filter((e) => e.published !== false && !evs.includes(e) && toDate(e.date))
     .sort((a, b) => toDate(b.date) - toDate(a.date)).slice(0, 6);
-  let html = `<span class="kicker">Calendrier</span>${cut('Agenda', 'big')}`;
+  let html = `<span class="kicker">Calendrier</span>${cut('Agenda', 'big')}
+    <section class="block official-agenda" style="margin:1rem 0">
+      <span class="kicker">Événement national · départ Marseille</span>
+      <h2 class="serif">Séjour ski DEJJ 2027</h2>
+      <p class="type">21–28 février 2027 · Alpes-de-Haute-Provence</p>
+      <p>REDEF, Pionniers et JAC · du CP à la Terminale · 870 € tout compris selon l’annonce officielle.</p>
+      <a class="btn btn-small" href="https://www.dejj.fr/copie-de-bafa-fg-appro" target="_blank" rel="noopener">Informations et inscription sur DEJJ.fr</a>
+    </section>
+    <section class="block official-agenda" style="margin:1rem 0">
+      <span class="kicker">Stage national · départ Marseille</span>
+      <h2 class="serif">Formation Maayan</h2>
+      <p class="type">22–31 décembre 2026 · Pas-de-Calais</p>
+      <p>Pour les jeunes de 15 ans (nés en 2011). Formation, hébergement, pension complète casher et transports inclus. Tarif adhérent annoncé : 449 €.</p>
+      <a class="btn btn-small" href="https://www.dejj.fr/copie-de-ski-sud-marseille-nice-2027-1" target="_blank" rel="noopener">Informations et inscription sur DEJJ.fr</a>
+    </section>
+    <p class="muted" style="font-size:.85rem">Les événements locaux de Marseille ne sont ajoutés au calendrier que lorsque leurs dates sont confirmées sur le site officiel. La liste actuellement indexée affiche encore des événements d’octobre 2026, déjà passés.</p>`;
   if (!S.user) html += `<div class="block" style="margin-top:1rem"><p>Connecte-toi pour t’inscrire aux événements et voir les places restantes.</p><a class="btn" href="#/compte">Connexion</a></div>`;
   if (!evs.length) html += '<div class="empty" style="margin-top:1rem">Aucun événement à venir.</div>';
   let lastMonth = '';
@@ -665,7 +681,8 @@ function pageBoosters() {
 
 function pageAlbum() {
   if (!S.user) return `<span class="kicker">Collection</span>${cut('Album', 'big')}<div class="block" style="margin-top:1rem"><p>Connecte-toi pour voir ta collection.</p><a class="btn" href="#/compte">Connexion</a></div>`;
-  const cards = visibleCards();
+  const catalogue = visibleCards();
+  const cards = isAdmin() ? catalogue : catalogue.filter((c) => S.collection.has(c.id));
   const a = S.album;
   const ownedIds = cards.filter((c) => S.collection.has(c.id));
   const dups = [...S.collection.values()].reduce((s, c) => s + Math.max(0, (Number(c.count) || 1) - 1), 0);
@@ -674,21 +691,22 @@ function pageAlbum() {
   const order = { legendaire: 0, epique: 1, rare: 2, commune: 3 };
   let shown = cards.filter((c) => (a.filter === 'toutes' || (c.collection || 'Autres') === a.filter)
     && (a.cat === 'toutes' || c.category === a.cat)
-    && (a.owned === 'toutes' || (a.owned === 'possedees') === S.collection.has(c.id))
+    && (isAdmin() ? (a.owned === 'toutes' || (a.owned === 'possedees') === S.collection.has(c.id)) : S.collection.has(c.id))
     && (!a.q || norm(c.name || '').includes(norm(a.q))));
   if (a.sort === 'rarete') shown.sort((x, y) => (order[x.rarity] ?? 9) - (order[y.rarity] ?? 9));
   else if (a.sort === 'nom') shown.sort((x, y) => String(x.name).localeCompare(String(y.name), 'fr'));
   else if (a.sort === 'doublons') shown.sort((x, y) => (S.collection.get(y.id)?.count || 0) - (S.collection.get(x.id)?.count || 0));
-  const pct = cards.length ? Math.round((ownedIds.length / cards.length) * 100) : 0;
-  const byRar = Object.keys(RAR).map((r) => ({ r, all: cards.filter((c) => c.rarity === r).length, got: ownedIds.filter((c) => c.rarity === r).length }));
+  const pct = catalogue.length ? Math.round((ownedIds.length / catalogue.length) * 100) : 0;
+  const byRar = Object.keys(RAR).map((r) => ({ r, all: catalogue.filter((c) => c.rarity === r).length, got: catalogue.filter((c) => c.rarity === r && S.collection.has(c.id)).length }));
   return `<span class="kicker">Collection</span>${cut('Mon album', 'big')}
+  <p class="album-intro">${isAdmin() ? 'Vue administrateur : catalogue complet et cartes à compléter.' : 'Ton classeur personnel : seules les cartes que tu as obtenues apparaissent ici.'}</p>
   <div class="album-head">
-    <div class="progress" style="margin:.8rem 0"><b class="type">${ownedIds.length} / ${cards.length} découvertes · ${pct} %</b><div class="bar"><i style="width:${pct}%"></i></div></div>
+    <div class="progress" style="margin:.8rem 0"><b class="type">${ownedIds.length} / ${catalogue.length} découvertes · ${pct} %</b><div class="bar"><i style="width:${pct}%"></i></div></div>
     <div class="album-stats">${byRar.map(({ r, all, got }) => `<span class="chip ${r === 'legendaire' ? 'o' : r === 'rare' ? 'y' : ''}">${RAR[r].label} ${got}/${all}</span>`).join('')}<span class="chip">${plural(dups, 'doublon')}</span></div>
   </div>
   <div class="tabs"><button class="${a.filter === 'toutes' ? 'on' : ''}" data-act="albumfilter" data-v="toutes">Toutes</button>${cols.map((c) => `<button class="${a.filter === c ? 'on' : ''}" data-act="albumfilter" data-v="${esc(c)}">${esc(c)}</button>`).join('')}</div>
   <div class="tabs">${['rarete', 'nom', 'doublons'].map((s) => `<button class="${a.sort === s ? 'on' : ''}" data-act="albumsort" data-v="${s}">${s === 'rarete' ? 'Tri : rareté' : s === 'nom' ? 'Tri : nom' : 'Tri : doublons'}</button>`).join('')}
-    ${['toutes', 'possedees', 'manquantes'].map((s) => `<button class="${a.owned === s ? 'on' : ''}" data-act="albumowned" data-v="${s}">${s === 'toutes' ? 'Tout' : s === 'possedees' ? 'Possédées' : 'Manquantes'}</button>`).join('')}
+    ${isAdmin() ? ['toutes', 'possedees', 'manquantes'].map((s) => `<button class="${a.owned === s ? 'on' : ''}" data-act="albumowned" data-v="${s}">${s === 'toutes' ? 'Tout' : s === 'possedees' ? 'Possédées' : 'Manquantes'}</button>`).join('') : ''}
   </div>
   ${cats.length ? `<div class="tabs">${['toutes', ...cats].map((c) => `<button class="${a.cat === c ? 'on' : ''}" data-act="albumcat" data-v="${esc(c)}">${c === 'toutes' ? 'Toutes catégories' : esc(CATS[c] || c)}</button>`).join('')}</div>` : ''}
   <p><input id="album-q" placeholder="Rechercher une carte…" value="${esc(a.q)}" style="max-width:320px" aria-label="Rechercher une carte"></p>
@@ -916,6 +934,43 @@ function pageSaga() {
     </section>
     <section class="block alt tape"><span class="kicker">Quiz</span><div style="margin-top:.8rem">${quizHtml}</div></section>
   </div>`;
+}
+
+
+function pageInfos() {
+  return `<span class="kicker">Le mouvement</span>${cut('Infos & dons', 'big')}
+    <section class="block info-block">
+      <h2 class="serif">Les tranches d’âge</h2>
+      <div class="age-cards">
+        <article><span class="age-label">REDEF</span><h3>Primaire</h3><p>À partir du CP.</p></article>
+        <article><span class="age-label">PIONNIERS</span><h3>Collège</h3><p>De la 6e à la 4e.</p></article>
+        <article><span class="age-label">JAC</span><h3>Lycée</h3><p>De la 3e à la Terminale.</p></article>
+      </div>
+      <p class="muted">Repères publiés par le DEJJ dans sa présentation des séjours. Les groupes et critères d’inscription peuvent être précisés par l’équipe locale.</p>
+    </section>
+    <section class="block info-block">
+      <h2 class="serif">Prochain séjour annoncé</h2>
+      <div class="official-event">
+        <p class="type">21 au 28 février 2027 · Alpes-de-Haute-Provence</p>
+        <h3>Séjour ski DEJJ 2027</h3>
+        <p>Départs de Marseille et Nice. Séjour annoncé pour les jeunes du CP à la Terminale, groupes REDEF, Pionniers et JAC.</p>
+        <p><strong>Tarif annoncé : 870 € tout compris</strong> (transport, pension complète, cours ESF, forfait et matériel).</p>
+        <p>Au programme : 10 heures de cours ESF, passage des étoiles et sortie détente (patinoire ou bowling), avec les activités et veillées DEJJ.</p>
+        <a class="btn" href="https://www.dejj.fr/copie-de-bafa-fg-appro" target="_blank" rel="noopener">Voir les informations officielles</a>
+      </div>
+      <p class="muted">Les détails sont ceux publiés sur le site national du DEJJ ; vérifie les disponibilités et les modalités directement auprès de l’association.</p>
+    </section>
+    <section class="block info-block">
+      <h2 class="serif">Soutenir le DEJJ</h2>
+      <p>Les dons contribuent notamment aux activités éducatives, aux journées en centre de vacances, aux formations BAFA et aux séjours.</p>
+      <div class="donation-list">
+        ${[['1,90 €','Le petit DEJJ'],['4,90 €','La pause DEJJ'],['9,90 €',"Le DEJJ’euner"],['15,90 €',"DEJJ’Flix"],['19,90 €','Le bouquet du DEJJ'],['29,90 €','Le caddie du DEJJ']].map(([price,label]) => `<div><b>${price}/mois</b><span>${label}</span></div>`).join('')}
+      </div>
+      <a class="btn" href="https://www.dejj.fr/copie-de-faire-un-don" target="_blank" rel="noopener">Faire un don au DEJJ</a>
+    </section>
+    <p class="info-source">Informations issues de <a href="https://www.dejj.fr/" target="_blank" rel="noopener">dejj.fr</a>. Pour les activités locales de Marseille, consulte aussi la rubrique officielle des événements.</p>
+    <a href="https://www.dejj.fr/event-list" target="_blank" rel="noopener">Consulter tous les événements du DEJJ</a>
+  `;
 }
 
 /* ============================== Chabbat ============================== */
